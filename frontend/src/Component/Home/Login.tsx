@@ -1,46 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosAPI } from '../../AxiosApi';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [navBg, setNavBg] = useState(
-    'bg-gradient-to-r from-violet-500 to-fuchsia-500'
-  );
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setNavBg('bg-blue-700');
-      } else {
-        setNavBg('bg-gradient-to-r from-violet-500 to-fuchsia-500');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const [navBg1, setNavBg1] = useState('text-white');
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setNavBg1('text-black');
-      } else {
-        setNavBg1('text-black');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   const [data, setData] = useState({
     email: '',
     password: '',

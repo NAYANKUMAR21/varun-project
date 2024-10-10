@@ -1,8 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+
 import { AxiosAPI } from '../../AxiosApi';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';

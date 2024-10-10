@@ -1,8 +1,7 @@
-import React from 'react';
 import { AxiosAPI } from '../../AxiosApi';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
 
 const Maindashboard = () => {

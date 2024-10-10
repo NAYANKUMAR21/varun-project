@@ -171,9 +171,10 @@ const ViewTask: React.FC = () => {
                                 }
                               >
                                 {/* <option value="">none</option> */}
-                                <option value="Completed">Complete</option>
                                 <option value="Partial">Partial</option>
+                                <option value="Completed">Complete</option>
                                 <option value="Incomplete">Incomplete</option>
+                                <option value="Pending">Pending</option>
                               </select>
                             </td>
                           </tr>

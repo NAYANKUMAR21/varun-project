@@ -1,29 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-
+import { createSlice } from '@reduxjs/toolkit';
 
 const LoginSlice = createSlice({
-    name:'login',
-    initialState:{
-        loading:false,
+  name: 'login',
+  initialState: {
+    loading: false,
+  },
+  reducers: {
+    loginRequest: (state) => {
+      state.loading = true;
     },
-    reducers:{
-        loginRequest:(state,action)=>{
-            state.loading=true;
-        },
-        loginSuccess:(state,action)=>{
-            state.loading=false;
-        },
-        loginFailure:(state,action)=>{
-            state.loading=false;
-        }
-    }
-})
+    loginSuccess: (state) => {
+      state.loading = false;
+    },
+    loginFailure: (state) => {
+      state.loading = false;
+    },
+  },
+});
 
+const { actions, reducer } = LoginSlice;
 
-const {actions,reducer} = LoginSlice;
-
-
-export const {loginRequest,loginSuccess,loginFailure} = actions;
+export const { loginRequest, loginSuccess, loginFailure } = actions;
 
 export default reducer;

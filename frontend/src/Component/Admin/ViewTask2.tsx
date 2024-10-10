@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { Link } from 'react-router-dom';
 // import TableComp from '../loader/TableComp';
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
   const month = date.getMonth() + 1; // Months are zero-based
   const day = date.getDate();
   const year = date.getFullYear();
@@ -21,10 +21,14 @@ function ViewTask2() {
     try {
       const response = await AxiosAPI.get('/admin/get-task-updates');
       console.log(response.data.data);
+      const SortedData = response.data.data.sort((a: any, b: any) => {
+        return a.employeeInfo.employeeId - b.employeeInfo.employeeId;
+      });
+
       setMainData({
         ...mainData,
-        search: response.data.data,
-        data: response.data.data,
+        search: SortedData,
+        data: SortedData,
       });
       console.log(response.data.data, 'response');
     } catch (error) {
@@ -61,7 +65,7 @@ function ViewTask2() {
   }, []);
 
   return (
-    <div className="bg-gray-100 h-screen w-full">
+    <div className="bg-gray-100 h-screen w-full mt-10">
       <div className=" w-1/4 flex bg-gray-100">
         <div className="flex flex-col space-y-4">
           <input

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSpring, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 
 const Home: React.FC = () => {
   const [navBg, setNavBg] = useState('bg-inherit');
@@ -36,11 +36,6 @@ const Home: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const springs = useSpring({
-    from: { x: 0 },
-    to: { x: 90 },
-  });
 
   return (
     <div>

@@ -1,4 +1,3 @@
-import { BASE_URL } from '../../AxiosApi';
 import Navbar from '../Navbar/Navbar';
 
 const ProfileView = () => {

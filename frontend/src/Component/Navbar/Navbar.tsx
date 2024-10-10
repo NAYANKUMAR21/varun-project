@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
 import DateTimeDisplay from './DateAndTime';
 function Navbar({
@@ -7,45 +6,6 @@ function Navbar({
 }: {
   profileData: { Eid?: string; imageUrl?: string };
 }) {
-  //   const [Eid, SetEid] = useState<string>('');
-
-  const [navBg1, setNavBg1] = useState('text-white');
-  const [navBg, setNavBg] = useState(
-    'bg-gradient-to-r from-violet-500 to-fuchsia-500'
-  );
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setNavBg('bg-white');
-      } else {
-        setNavBg('bg-white');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setNavBg1('text-white');
-      } else {
-        setNavBg1('text-white');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  //   useEffect(() => {
-  //     const data = JSON.parse(localStorage.getItem('employee') || '{}');
-  //     SetEid(data.EID);
-  //   }, []);
   return (
     <div>
       <nav
