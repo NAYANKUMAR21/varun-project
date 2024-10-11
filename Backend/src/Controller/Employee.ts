@@ -269,9 +269,9 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
     const DateConvert = new Date(date).toISOString().split('T')[0];
 
     console.log('DateConvert', DateConvert);
-
+    console.log(new Date().getTime());
     const result = data.map(async (update: any) => {
-      console.log(update);
+      // console.log(update);
       await Task.updateOne(
         { _id: update._id },
         {
@@ -281,6 +281,7 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
               employee: employee._id,
               DateAdded: DateConvert,
               comment: comment,
+              createdAt: new Date().getMilliseconds(),
             },
           },
         }

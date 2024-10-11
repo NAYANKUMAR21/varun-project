@@ -6,7 +6,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="">
       {/* Navbar */}
-      <nav className="text-black fixed w-full z-10 transition-colors duration-300 bg-white mt-4">
+      <nav className="text-black fixed w-full z-10 transition-colors duration-300 bg-white">
         <div className="container mx-auto flex justify-between items-center ">
           <div className="text-white text-2xl font-bold font-serif">
             <img
@@ -28,13 +28,20 @@ const Dashboard: React.FC = () => {
 
       {/* sidebar with outlet */}
       <div className="flex">
-        <div className="w-1/6 bg-slate-600 min-h-screen h-full fixed top-10 mt-20">
+        <div className="w-1/6 bg-slate-600 min-h-screen h-full fixed top-10 pt-20 border border-black">
           <div className="p-4">
             <h1 className="text-white text-2xl font-serif underline">Admin</h1>
             <ul className="mt-4 space-y-4">
               {/* Sidebar Links */}
               <li className="text-white font-serif">
                 <Link to="">Dashboard</Link>
+              </li>
+              <li className="text-white font-serif">
+                <Link to="/dashboard/add-department">
+                  {/* Employee Updated Tasks */}
+                  {/* Employee Task Update Log */}
+                  Add Department
+                </Link>
               </li>
               <li className="text-white font-serif">
                 <Link to="addemployee">Add Employee</Link>

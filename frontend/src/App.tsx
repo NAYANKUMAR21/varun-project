@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from './Component/Home/Home';
+// import Home from './Component/Home/Home';
 import Login from './Component/Home/Login';
 import Dashboard from './Component/Admin/Dashboard';
 import AddEmployee from './Component/Admin/AddEmployee';
@@ -18,15 +18,17 @@ import Maindashboard from './Component/Admin/Maindashboard';
 import ViewTask2 from './Component/Admin/ViewTask2';
 
 import CheckSingleEmployeeUpdate from './Component/Admin/checkSingleEmployeeUpdate';
+import AddDepratment from './Component/Admin/AddDepratment';
 
 const App: React.FC = () => {
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signin" element={<Login />} />
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="add-department" element={<AddDepratment />} />
             <Route path="" element={<Maindashboard />} />
             <Route path="addemployee" element={<AddEmployee />} />
             <Route path="viewemployee" element={<ViewEmployee />} />

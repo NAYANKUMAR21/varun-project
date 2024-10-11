@@ -33,16 +33,15 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  deadline: {
-    type: String,
-    required: true,
-  },
+
   status: {
     type: String,
     required: true,
+    default: 'Completed',
   },
   solutions: [
     {
+      createdAt: { type: Number, default: new Date() },
       comment: { type: String, default: '' },
       DateAdded: { type: String },
       employee: {

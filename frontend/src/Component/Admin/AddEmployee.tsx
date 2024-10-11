@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 // import { useEffect } from 'react';
@@ -13,8 +13,19 @@ type Employee = {
   employeeId: string;
   department: string;
 };
-
+const getDepartments = async () => {
+  try {
+    const getDepts = await AxiosAPI.get('/admin/get-departments');
+    console.log(getDepts.data.data);
+    return getDepts.data.data;
+  } catch (er: any) {
+    console.log(er.message);
+  }
+};
 const AddEmployee: React.FC = () => {
+  const [departmentState, setDepartment] = useState<
+    { Name: string; _id: string }[]
+  >([]);
   const [data, setData] = useState<Employee>({
     name: '',
     email: '',
@@ -62,6 +73,19 @@ const AddEmployee: React.FC = () => {
       toast.error('Failed to Add Employee');
     }
   };
+
+  useEffect(() => {
+    const depts = async () => {
+      try {
+        const departs = await getDepartments();
+        console.log(departs);
+        setDepartment([...departs]);
+      } catch (er: any) {
+        console.log('inside effect', er.message);
+      }
+    };
+    depts();
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -117,14 +141,25 @@ const AddEmployee: React.FC = () => {
             className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {' '}
-            <option value="">Choose dept</option>
-            <option value="Quality">Quality</option>
+            {/* <option value="">Choose dept</option> */}
+            {/* <option value="Quality">Quality</option> */}
             {/* <option value="Bay 1">Bay 1</option>
             <option value="Bay 2">Bay 2</option>
             <option value="Bay 3">Bay 3</option> */}
-            <option value="Shipping & Receiving">Shipping & Receiving</option>
+            {/* <option value="Shipping & Receiving">Shipping & Receiving</option> */}
             {/* <option value="Assembly">Assembly</option> */}
-            <option value="Warehouse">Warehouse</option>
+            {/* <option value="Warehouse">Warehouse</option> */}
+            <option value="">Choose department</option>
+            {departmentState &&
+              departmentState.map(
+                (ele: { _id: string; Name: string }, index: number) => {
+                  return (
+                    <option key={index} value={ele.Name}>
+                      {ele.Name}
+                    </option>
+                  );
+                }
+              )}
           </select>
           {/* <input
             type="text"

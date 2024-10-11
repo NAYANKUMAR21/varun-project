@@ -11,6 +11,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import formatDate from '../utils/dateConverter';
+import DepartmentModel from '../Model/Department';
 
 const router = Router();
 
@@ -297,8 +298,7 @@ router.post(
   '/add-task',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { task, description, deadline, department, category }: ITask =
-        req.body;
+      const { task, description, department, category }: ITask = req.body;
       const employees = await Employee.find({ department: department });
       console.log(employees.length, employees);
       if (employees.length === 0) {
@@ -307,12 +307,10 @@ router.post(
           message: 'No Employees Found',
         });
       } else {
-        const DateConvert = new Date(deadline).toISOString().split('T')[0];
-        console.log(deadline, DateConvert);
         await Task.create({
           task,
           description,
-          deadline: DateConvert,
+
           status: 'Pending',
           department,
           category,
@@ -321,7 +319,7 @@ router.post(
         console.log({
           task,
           description,
-          deadline: DateConvert,
+
           status: 'Pending',
           department,
           category,
@@ -562,9 +560,74 @@ router.get('/get-task-updates', async (req, res) => {
     //   },
     //   { solutions: 1 }
     // ).populate('solutions.employee');
+    // const getUpdatedTasks = await Task.aggregate([
+    //   {
+    //     $match: {
+    //       status: { $in: ['Completed', 'Partial', 'Incomplete'] },
+    //     },
+    //   },
+    //   {
+    //     $unwind: '$solutions',
+    //   },
+    //   {
+    //     // Match solutions with DateAdded before the deadline
+    //     $match: {
+    //       $expr: {
+    //         $lt: ['$solutions.DateAdded', '$deadline'], // DateAdded < deadline
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: {
+    //         employee: '$solutions.employee',
+    //         dateAdded: '$solutions.DateAdded', // Group by DateAdded
+    //       },
+    //       count: { $sum: 1 }, // Count occurrences
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'employees',
+    //       localField: '_id.employee',
+    //       foreignField: '_id',
+    //       as: 'employeeDetails',
+    //     },
+    //   },
+    //   {
+    //     $unwind: {
+    //       path: '$employeeDetails',
+    //       preserveNullAndEmptyArrays: true, // Optional: Keep documents without matching employees
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0, // Exclude the default _id field from the output
+    //       count: 1, // Include the count
+    //       DateAdded: '$_id.dateAdded', // Include DateAdded
+    //       employeeId: '$_id.employee', // Include employeeId
+    //       employeeInfo: {
+    //         _id: '$employeeDetails._id', // Include employee _id
+    //         name: '$employeeDetails.name', // Include employee name
+    //         email: '$employeeDetails.email', // Include employee email
+    //         employeeId: '$employeeDetails.employeeId', // Include employeeId
+    //         department: '$employeeDetails.department', // Include department
+    //         __v: '$employeeDetails.__v', // Include version key
+    //       },
+    //     },
+    //   },
+    // ]);
+
     const getUpdatedTasks = await Task.aggregate([
-      { $match: { status: { $in: ['Completed', 'Partial', 'Incomplete'] } } },
-      { $unwind: '$solutions' },
+      {
+        $match: {
+          status: { $in: ['Completed', 'Partial', 'Incomplete'] },
+        },
+      },
+      {
+        $unwind: '$solutions',
+      },
+
       {
         $group: {
           _id: {
@@ -572,6 +635,7 @@ router.get('/get-task-updates', async (req, res) => {
             dateAdded: '$solutions.DateAdded', // Group by DateAdded
           },
           count: { $sum: 1 }, // Count occurrences
+          createdAt: { $first: '$createdAt' }, // Capture createdAt from the original document
         },
       },
       {
@@ -592,6 +656,8 @@ router.get('/get-task-updates', async (req, res) => {
         $project: {
           _id: 0, // Exclude the default _id field from the output
           count: 1, // Include the count
+          createdAt: 1, // Include createdAt
+          deadline: 1, // Include deadline
           DateAdded: '$_id.dateAdded', // Include DateAdded
           employeeId: '$_id.employee', // Include employeeId
           employeeInfo: {
@@ -604,7 +670,13 @@ router.get('/get-task-updates', async (req, res) => {
           },
         },
       },
+      {
+        $sort: {
+          createdAt: 1, // Sort by createdAt in -1 for descending and 1 for ascendings  order
+        },
+      },
     ]);
+
     console.log(getUpdatedTasks);
 
     return res.status(200).json({
@@ -696,5 +768,43 @@ router.get(
     }
   }
 );
+
+router.post('/add-dept', async (req, res) => {
+  const { department } = req.body;
+  try {
+    const checkDept = await DepartmentModel.findOne({ Name: department });
+    console.log(checkDept);
+    if (checkDept) {
+      return res.status(400).send({ message: 'Department Already Exists...' });
+    }
+    const depth = await DepartmentModel.create({
+      Name: department,
+    });
+    return res
+      .status(200)
+      .send({ message: 'depatment created successfully..', data: depth });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+router.get('/get-departments', async (req, res) => {
+  const { department } = req.body;
+  try {
+    const data = await DepartmentModel.find();
+    return res
+      .status(200)
+      .send({ message: 'depatment created successfully..', data });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
 
 export default router;

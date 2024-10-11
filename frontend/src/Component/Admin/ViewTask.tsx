@@ -121,7 +121,7 @@ const ViewTask: React.FC = () => {
                     return (
                       <React.Fragment key={task._id}>
                         {showCategory && (
-                          <tr className="bg-red-300 font-bold text-lg">
+                          <tr className="bg-red-500 font-bold text-lg">
                             <td colSpan={3} className="px-4 py-2">
                               {categoryName}
                             </td>
@@ -137,9 +137,9 @@ const ViewTask: React.FC = () => {
                                 <p className="text-xs text-gray-600">
                                   Description: {task.description}
                                 </p>
-                                <p className="text-xs text-gray-600">
+                                {/* <p className="text-xs text-gray-600">
                                   Deadline: {task.deadline}
-                                </p>
+                                </p> */}
                                 <p className="text-xs text-gray-600">
                                   Status: {task.status}
                                 </p>

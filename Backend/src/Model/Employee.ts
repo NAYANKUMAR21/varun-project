@@ -19,7 +19,8 @@ const EmployeeSchema = new mongoose.Schema({
 
   employeeId: {
     type: String,
-    required: true,
+    required: [true, 'Employee ID is required'],
+    unique: [true, 'Employee ID already exists'],
   },
 
   department: {

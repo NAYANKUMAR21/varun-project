@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-
 import { AxiosAPI } from '../../AxiosApi';
 import { Dept } from '../Home/Dept';
+
+const getDepartments = async () => {
+  try {
+    const getDepts = await AxiosAPI.get('/admin/get-departments');
+    console.log(getDepts.data.data);
+    return getDepts.data.data;
+  } catch (er: any) {
+    console.log(er.message);
+  }
+};
 const AddTask: React.FC = () => {
+  const [departmentState, setDepartment] = useState<
+    { Name: string; _id: string }[]
+  >([]);
   const [data, setData] = useState({
     task: '',
     description: '',
-    deadline: '',
+
     status: '',
     department: '',
     category: '',
@@ -54,7 +66,17 @@ const AddTask: React.FC = () => {
     }
   };
   const [selectedDepartment, setSelectedDepartment] = useState('');
-
+  useEffect(() => {
+    const depts = async () => {
+      try {
+        const departs = await getDepartments();
+        setDepartment(departs);
+      } catch (er: any) {
+        console.log('inside effect', er.message);
+      }
+    };
+    depts();
+  }, []);
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white w-full max-w-lg p-6 rounded-md shadow-md">
@@ -71,75 +93,85 @@ const AddTask: React.FC = () => {
           >
             <option value="">--select --</option>
 
-            <option value="Quality">Quality</option>
+            {departmentState &&
+              departmentState.map(
+                (ele: { _id: string; Name: string }, index: number) => {
+                  return (
+                    <option key={index} value={ele.Name}>
+                      {ele.Name}
+                    </option>
+                  );
+                }
+              )}
+            {/* <option value="Quality">Quality</option>
 
             <option value="Shipping & Receiving">Shipping & Receiving</option>
 
-            <option value="Warehouse">Warehouse</option>
+            <option value="Warehouse">Warehouse</option> */}
           </select>
 
           <label htmlFor="category" className="w-full ">
             Category
           </label>
-          {selectedDepartment !== 'Quality' ? (
-            <input
-              type="text"
-              name="category"
-              onChange={handleCategoryChange}
-              placeholder="category"
-              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          ) : (
-            <select
+          {/* {selectedDepartment !== 'Quality' ? ( */}
+          <input
+            type="text"
+            name="category"
+            onChange={handleCategoryChange}
+            placeholder="category"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {/* ) : ( */}
+          {/* <select
               name="category"
               id="category"
               onChange={handleCategoryChange}
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option>--select--</option>
-              {/* <option value="Incoming Inspection">Incoming Inspection</option>
+              <option>--select--</option> */}
+          {/* <option value="Incoming Inspection">Incoming Inspection</option>
               <option value="Layout Table">Layout Table</option>
               <option value="Keyence Table">Keyence Table</option>
               <option value="CMM">CMM</option>
               <option value="Visual Inspection">Visual Inspection</option>
               <option value="General Area">General Area</option> */}
-              {selectedDepartment === 'Quality' &&
+          {/* {selectedDepartment === 'Quality' &&
                 Dept.map((dept) => (
                   <option key={dept.Category} value={dept.Category}>
                     {dept.Category}
                   </option>
                 ))}
-            </select>
-          )}
+            </select> */}
+          {/* )} */}
 
           <label htmlFor="task" className="w-full ">
             {' '}
             Task
           </label>
 
-          {selectedDepartment !== 'Quality' ? (
-            <input
-              type="text"
-              name="task"
-              onChange={handleChange}
-              placeholder="Task"
-              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          ) : (
+          {/* {selectedDepartment !== 'Quality' ? ( */}
+          <input
+            type="text"
+            name="task"
+            onChange={handleChange}
+            placeholder="Task"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {/* ) : (
             <select
               name="task"
               onChange={handleChange}
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">--select task--</option>
-              {tasks &&
+              <option value="">--select task--</option> */}
+          {/* {tasks &&
                 tasks.map((task: any) => (
                   <option key={task} value={task}>
                     {task}
                   </option>
                 ))}
-            </select>
-          )}
+            </select> */}
+          {/* )} */}
           <textarea
             placeholder="Please Add Description it is mandatory...."
             name="description"
@@ -147,13 +179,7 @@ const AddTask: React.FC = () => {
             className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={4}
           />
-          <input
-            type="date"
-            name="deadline"
-            onChange={handleChange}
-            placeholder="Deadline"
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+
           {/* <select
             className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >

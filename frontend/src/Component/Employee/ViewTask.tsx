@@ -142,7 +142,7 @@ const ViewTask: React.FC = () => {
                             <tr className="text-black px-4 py-4 border">
                               <td
                                 colSpan={3}
-                                className="bg-red-300 font-bold text-lg p-2"
+                                className="bg-red-500 font-bold text-lg p-2"
                               >
                                 {categoryName}
                               </td>
@@ -174,7 +174,7 @@ const ViewTask: React.FC = () => {
                                 <option value="Partial">Partial</option>
                                 <option value="Completed">Complete</option>
                                 <option value="Incomplete">Incomplete</option>
-                                <option value="Pending">Pending</option>
+                                {/* <option value="Pending">Pending</option> */}
                               </select>
                             </td>
                           </tr>
@@ -184,7 +184,7 @@ const ViewTask: React.FC = () => {
                 </tbody>
               </table>
               <div className="flex p-2 w-90 border border-black  justify-space-around items-center px-5">
-                <input
+                {/* <input
                   type="date"
                   value={
                     dateAnCOmment.date instanceof Date
@@ -192,13 +192,33 @@ const ViewTask: React.FC = () => {
                       : dateAnCOmment.date
                   }
                   name="date"
-                  onChange={(e) =>
-                    SetDateAnCOmment({
-                      ...dateAnCOmment,
-                      date: new Date(e.target.value),
-                    })
-                  }
-                />
+                  // onChange={(e) =>
+                  //   SetDateAnCOmment({
+                  //     ...dateAnCOmment,
+                  //     date: new Date(e.target.value),
+                  //   })
+                  // }
+                /> */}
+                <div>
+                  {/* {dateAnCOmment.date instanceof Date
+                    ? dateAnCOmment.date.toISOString().split('T')[0]
+                    : dateAnCOmment.date} */}
+
+                  {dateAnCOmment.date
+                    .toISOString()
+                    .split('T')[0]
+                    .split('-')[1] +
+                    '-' +
+                    dateAnCOmment.date
+                      .toISOString()
+                      .split('T')[0]
+                      .split('-')[1] +
+                    '-' +
+                    dateAnCOmment.date
+                      .toISOString()
+                      .split('T')[0]
+                      .split('-')[0]}
+                </div>
                 <textarea
                   name=""
                   id=""

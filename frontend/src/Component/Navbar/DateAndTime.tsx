@@ -15,7 +15,7 @@ const DateTimeDisplay = () => {
     <div>
       <div>
         <p>{currentTime.toLocaleDateString()}</p>
-        <p>{currentTime.toLocaleTimeString()}</p>
+        {/* <p>{currentTime.toLocaleTimeString()}</p> */}
       </div>
     </div>
   );

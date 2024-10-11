@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosAPI } from '../../AxiosApi';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
+const getDepartments = async () => {
+  try {
+    const getDepts = await AxiosAPI.get('/admin/get-departments');
+    console.log(getDepts.data.data);
+    return getDepts.data.data;
+  } catch (er: any) {
+    console.log(er.message);
+  }
+};
 const Login: React.FC = () => {
   const [data, setData] = useState({
     email: '',
     password: '',
   });
+  const [departmentState, setDepartment] = useState<
+    { Name: string; _id: string }[]
+  >([]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -41,6 +53,18 @@ const Login: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const depts = async () => {
+      try {
+        const departs = await getDepartments();
+        console.log(departs);
+        setDepartment([...departs]);
+      } catch (er: any) {
+        console.log('inside effect', er.message);
+      }
+    };
+    depts();
+  }, []);
   return (
     <div>
       {/* Navbar */}
@@ -96,14 +120,25 @@ const Login: React.FC = () => {
             className="w-full px-4 py-2 mt-2 border rounded-lg outline-none"
             onChange={handleChange}
           >
-            <option value="">Choose Department</option>
-            <option value="Quality">Quality</option>
+            <option value="">Choose department</option>
+            {departmentState &&
+              departmentState.map(
+                (ele: { _id: string; Name: string }, index: number) => {
+                  return (
+                    <option key={index} value={ele.Name}>
+                      {ele.Name}
+                    </option>
+                  );
+                }
+              )}
+            {/* <option value="">Choose Department</option>
+            <option value="Quality">Quality</option> */}
             {/* <option value="Bay 1">Bay 1</option>
             <option value="Bay 2">Bay 2</option>
             <option value="Bay 3">Bay 3</option> */}
-            <option value="Shipping & Receiving">Shipping & Receiving</option>
+            {/* <option value="Shipping & Receiving">Shipping & Receiving</option> */}
             {/* <option value="Assembly">Assembly</option> */}
-            <option value="Warehouse">Warehouse</option>
+            {/* <option value="Warehouse">Warehouse</option> */}
           </select>
           <h2 className="text-xl font-semibold text-center text-gray-800">
             OR
