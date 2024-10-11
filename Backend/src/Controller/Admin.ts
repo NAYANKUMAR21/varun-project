@@ -773,16 +773,18 @@ router.post('/add-dept', async (req, res) => {
   const { department } = req.body;
   try {
     const checkDept = await DepartmentModel.findOne({ Name: department });
-    console.log(checkDept);
+    console.log('Name already exists: ', checkDept);
     if (checkDept) {
       return res.status(400).send({ message: 'Department Already Exists...' });
     }
     const depth = await DepartmentModel.create({
       Name: department,
     });
+
+    const data = await DepartmentModel.find();
     return res
       .status(200)
-      .send({ message: 'depatment created successfully..', data: depth });
+      .send({ message: 'depatment created successfully..', data });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -799,6 +801,49 @@ router.get('/get-departments', async (req, res) => {
       .status(200)
       .send({ message: 'depatment created successfully..', data });
   } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+router.delete('/delete-department/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await DepartmentModel.findByIdAndDelete(id);
+    const data = await DepartmentModel.find();
+
+    return res
+      .status(200)
+      .send({ message: 'depatment created successfully..', data });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+router.put('/update-department/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Name } = req.body;
+    const checkDept = await DepartmentModel.findOne({ Name: Name });
+    console.log(checkDept);
+    if (checkDept) {
+      return res.status(400).send({ message: 'Department Already Exists...' });
+    }
+    const response = await DepartmentModel.findByIdAndUpdate(id, {
+      Name: Name,
+    });
+    const data = await DepartmentModel.find();
+    return res
+      .status(200)
+      .send({ message: 'depatment created successfully..', data });
+  } catch (error: unknown) {
     return res.status(500).json({
       success: false,
       message: 'Internal server error',

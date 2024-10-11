@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AxiosAPI } from '../../AxiosApi';
-import { useNavigate } from 'react-router-dom';
+
 import { toast } from 'react-toastify';
+
+const getAllDepts = async () => {
+  try {
+    const response = await AxiosAPI.get('/admin/get-departments');
+    return response.data.data;
+  } catch (er: any) {
+    console.log(er.message);
+  }
+};
 
 export default function AddDepratment() {
   const [deptName, setDeptname] = useState<string>('');
+  const [Alldepts, setAlldepts] = useState<{ Name: 'string' }[]>([]);
+  const [EditName, setEditName] = useState<boolean>(false);
+  const [editId, setEditId] = useState<string>('');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeptname(e.target.value);
   };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setEditName(false);
       if (deptName === '') {
         return toast('OOPS: Department Feild is Empty...');
       }
@@ -19,15 +32,64 @@ export default function AddDepratment() {
         department: deptName,
       });
       console.log(response);
-      navigate('/dashboard/addemployee');
+      setAlldepts([...response.data.data]);
+      // navigate('/dashboard/addemployee');
     } catch (error) {
       console.log(error);
     }
   };
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await AxiosAPI.delete(`/admin/delete-department/${id}`);
+      console.log(response.data);
+      setAlldepts([...response.data.data]);
+    } catch (er: any) {
+      console.log(er.message);
+    }
+  };
+  const handleEdit = async (id: string) => {
+    const singleData = Alldepts.filter((ele: any) => {
+      return ele._id === id;
+    });
+    setDeptname(singleData[0].Name);
+    setEditName(true);
+    setEditId(id);
+  };
+  const HandleEditUpdate = async () => {
+    try {
+      setEditId('');
+      setEditName(false);
+
+      if (deptName === '') {
+        return toast('OOPS: Department Feild is Empty...');
+      }
+      const response = await AxiosAPI.put(
+        `/admin/update-department/${editId}`,
+        {
+          Name: deptName,
+        }
+      );
+      setAlldepts([...response.data.data]);
+      setDeptname('');
+      setEditName(false);
+      setEditId('');
+    } catch (er: any) {
+      console.log(er.message);
+    }
+  };
+  useEffect(() => {
+    const callFunction = async () => {
+      const data = await getAllDepts();
+      setAlldepts([...data]);
+    };
+    callFunction();
+  }, []);
+
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+          {/* Form Section */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <h2 className="text-2xl font-bold text-center text-gray-800">
               Add Department
@@ -48,13 +110,55 @@ export default function AddDepratment() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Add Department
-            </button>
+            {EditName ? (
+              <div className="flex justify-between items-center">
+                <div>
+                  <button
+                    onClick={HandleEditUpdate}
+                    type="submit"
+                    className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    Update Department
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Add Department
+              </button>
+            )}
           </form>
+
+          {/* Department List Section */}
+          {Alldepts && (
+            <div className="mt-8">
+              <h3 className="text-lg font-medium text-gray-800">
+                Departments List
+              </h3>
+              <div className="space-y-4 mt-4">
+                {Alldepts.map((ele: any) => (
+                  <div
+                    key={ele._id}
+                    className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm"
+                  >
+                    <div>{ele.Name}</div>
+                    <div>
+                      <button
+                        onClick={() => handleDelete(ele._id)}
+                        className="mr-4"
+                      >
+                        🗑️
+                      </button>
+                      <button onClick={() => handleEdit(ele._id)}>✏️</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
