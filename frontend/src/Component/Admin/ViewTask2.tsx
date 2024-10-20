@@ -123,6 +123,7 @@ function ViewTask2() {
                 <th scope="col" className="px-6 py-3">
                   Date
                 </th>
+
                 <th scope="col" className="px-6 py-3">
                   Click
                 </th>
@@ -169,6 +170,7 @@ function ViewTask2() {
                         {item.DateAdded.split('-')[2]} -{' '}
                         {item.DateAdded.split('-')[0]}
                       </td>
+
                       <td className="px-6 py-4">
                         <Link
                           to={`/dashboard/single-employee-update/${item.employeeInfo._id}/${item.employeeInfo.employeeId}`}

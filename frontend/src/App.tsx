@@ -19,7 +19,6 @@ import ViewTask2 from './Component/Admin/ViewTask2';
 
 import CheckSingleEmployeeUpdate from './Component/Admin/checkSingleEmployeeUpdate';
 import AddDepratment from './Component/Admin/AddDepratment';
-import PrivateAuth from './AuthContext/PrivateAuth';
 
 const App: React.FC = () => {
   return (

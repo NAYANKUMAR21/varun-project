@@ -66,7 +66,7 @@ const Login: React.FC = () => {
     const depts = async () => {
       try {
         const departs = await getDepartments();
-        console.log(departs);
+        console.log('Dept: ', departs);
         setDepartment([...departs]);
       } catch (er: any) {
         console.log('inside effect', er.message);
@@ -74,12 +74,11 @@ const Login: React.FC = () => {
     };
     depts();
   }, []);
-  if (value.employeeLogged) {
-    const employee = localStorage.getItem('employee');
-    console.log(value.employeeLogged, employee);
-    navigate('/viewtasks');
-    return;
-  }
+  const handleNavigate = (route: string) => {
+    navigate(route);
+  };
+  
+
   return (
     <div>
       {/* Navbar */}

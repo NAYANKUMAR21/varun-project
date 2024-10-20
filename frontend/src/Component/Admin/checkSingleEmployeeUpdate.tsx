@@ -1,34 +1,36 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AxiosAPI } from '../../AxiosApi';
+
+// import { compile } from '@fileforge/react-print';
+
 interface Employee {
   department: string;
   email: string;
-  employeeId: string; // Assuming this is a string representation of the employee ID
+  employeeId: string;
   name: string;
-  __v: number; // Version key, typically used by MongoDB
-  _id: string; // MongoDB ObjectId as a string
+  __v: number;
+  _id: string;
 }
 
 interface Solution {
   comment: string;
-  DateAdded: string; // ISO date string
-  employee: Employee; // Assuming this is a string representation of an ObjectId
-  _id: string; // Assuming this is a string representation of an ObjectId
+  DateAdded: string;
+  employee: Employee;
+  _id: string;
 }
 
 interface TaskEach {
   category: string;
-  createdAt: string; // ISO date string
-  deadline: string; // ISO date string or a date format
+  createdAt: string;
+  deadline: string;
   department: string;
   description: string;
-  solutions: Solution[]; // Array of Solution objects
+  solutions: Solution[];
   status: string;
   task: string;
   __v: number;
-  _id: string; // MongoDB ObjectId as a string
+  _id: string;
 }
 
 interface EmployeeData {
@@ -40,13 +42,102 @@ interface EmployeeData {
   Date: string;
   Category: string[];
 }
+
 function CheckSingleEmployeeUpdate() {
-  // get-task-update-of-single-user/:employee_id
-  //   const employee = localStorage.getItem('employee');
-  //   const employeeData = employee ? JSON.parse(employee) : null;
+  const refComponent = useRef<HTMLDivElement | null>(null);
+
+  const handlePrint = () => {
+    console.log('handlePrint function called');
+
+    // Get the content of the component from the ref
+    const content = refComponent.current?.innerHTML;
+
+    if (!content) {
+      console.error('No content to print');
+      return;
+    }
+
+    console.log('Content to print:', content);
+
+    // Create a new iframe element
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    document.body.appendChild(iframe);
+
+    console.log('Iframe created and appended to body');
+
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeWindow) {
+      console.error('Failed to get iframe window');
+      document.body.removeChild(iframe);
+      return;
+    }
+
+    const doc = iframeWindow.document;
+    if (!doc) {
+      console.error('Failed to get iframe document');
+      document.body.removeChild(iframe);
+      return;
+    }
+
+    console.log('Writing content to iframe');
+
+    // Write the content into the iframe
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+          <title>Print Component</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            @media print {
+              body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${content}
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    console.log('Content written to iframe, waiting for load');
+
+    // Wait for the iframe to load and then trigger the print dialog
+    iframe.onload = () => {
+      console.log('Iframe loaded, attempting to print');
+      setTimeout(() => {
+        try {
+          iframeWindow.focus(); // Ensure the iframe window has focus
+          iframeWindow.print();
+          console.log('Print dialog opened');
+        } catch (error) {
+          console.error('Failed to print:', error);
+        } finally {
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+            console.log('Iframe removed');
+          }, 100); // Short delay before removing iframe
+        }
+      }, 500); // Delay to ensure content is fully loaded
+    };
+  };
 
   const { id, id2 } = useParams();
-
   const [data, setData] = useState<TaskEach[]>([]);
   const [loader, setLoader] = useState(false);
   const [EmpDetails, SetEmpDetails] = useState<EmployeeData>({
@@ -59,8 +150,6 @@ function CheckSingleEmployeeUpdate() {
     Category: [],
   });
 
-  // console.log(id);
-
   const getUpdatesSingleEmp = async () => {
     try {
       setLoader(true);
@@ -68,37 +157,29 @@ function CheckSingleEmployeeUpdate() {
         `admin/get-task-update-of-single-user/${id}/${id2}`
       );
       setLoader(false);
-      // console.log(response.data);
       setData(response.data.data);
 
       const NameEmp = response.data.data[0]?.solutions.filter(
-        (ele: Solution) => {
-          // console.log('inside filter', ele);
-          return ele.employee.employeeId == id2;
-        }
+        (ele: Solution) => ele.employee.employeeId === id2
       )[0];
+
       const categories = [...new Set(data.map((task) => task.category))];
 
-      console.log('categories', categories);
       SetEmpDetails({
         name: response.data.name,
         count: response.data.count,
         department: response.data.department,
         employeeId: response.data.employeeId,
-        comment: NameEmp.comment ? NameEmp.comment : '',
-        Date: NameEmp.DateAdded ? NameEmp.DateAdded : '',
+        comment: NameEmp?.comment || '',
+        Date: NameEmp?.DateAdded || '',
         Category: categories,
       });
     } catch (er) {
       setLoader(false);
-      return console.log(
-        er instanceof Error
-          ? er.message
-          : 'Something wrong happened check single user file'
-      );
+      console.error(er instanceof Error ? er.message : 'Something went wrong');
     }
   };
-  // console.log('data check single user', data);
+
   useEffect(() => {
     getUpdatesSingleEmp();
   }, []);
@@ -106,82 +187,81 @@ function CheckSingleEmployeeUpdate() {
   return (
     <div className="mt-10">
       {loader && <h1 className="text-center">Loading...</h1>}
-
       {data.length === 0 && !loader && (
         <h1 className="text-center">No data found</h1>
       )}
-      {EmpDetails.name && (
-        <div className="flex justify-space-between items-start">
-          <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm mb-5 mr-10">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Employee Info
-            </h2>
 
-            <div className="mb-4">
-              <span className="text-gray-500">Name:</span>
-              <span className="text-gray-800 ml-2">{EmpDetails.name}</span>
+      <div ref={refComponent}>
+        {EmpDetails.name && (
+          <div className="flex items-start">
+            <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm mb-5 mr-10 flex-1">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Employee Info
+              </h2>
+              <div className="mb-4">
+                <span className="text-gray-500">Name:</span>
+                <span className="text-gray-800 ml-2">{EmpDetails.name}</span>
+              </div>
+              <div className="mb-4">
+                <span className="text-gray-500">Department:</span>
+                <span className="text-gray-800 ml-2">
+                  {EmpDetails.department}
+                </span>
+              </div>
+              <div className="mb-4">
+                <span className="text-gray-500">Employee ID:</span>
+                <span className="text-gray-800 ml-2">
+                  {EmpDetails.employeeId}
+                </span>
+              </div>
             </div>
-
-            <div className="mb-4">
-              <span className="text-gray-500">Department:</span>
-              <span className="text-gray-800 ml-2">
-                {EmpDetails.department}
-              </span>
-            </div>
-
-            <div className="mb-4">
-              <span className="text-gray-500">Employee ID:</span>
-              <span className="text-gray-800 ml-2">
-                {EmpDetails.employeeId}
-              </span>
-            </div>
-          </div>
-          <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm mb-10">
-            <div className="mb-4">
-              <span className="text-gray-500">Date Updated:</span>
-              <span className="text-gray-800 ml-2">
-                {new Date(EmpDetails.Date).toLocaleDateString('en-US')}
-              </span>
-            </div>
-            {/* {data[0].solutions[0].comment} */}
             <div>
-              <span className="text-gray-500">Comment</span>
-              <span className="text-gray-800 ml-2">{EmpDetails.comment}</span>
+              <div className="mb-4">
+                <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm mb-10 flex-1">
+                  <div className="mb-4">
+                    <span className="text-gray-500">Date Updated:</span>
+                    <span className="text-gray-800 ml-2">
+                      {new Date(EmpDetails.Date).toLocaleDateString('en-US')}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Comment:</span>
+                    <span className="text-gray-800 ml-2">
+                      {EmpDetails.comment}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  className="p-3 m-1 bg-orange-500 text-white h8 rounded"
+                  onClick={handlePrint}
+                >
+                  🖨️ Print
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      <section className="container font-mono min-h-screen">
-        <div className="w-full mb-8 rounded-lg shadow-lg bg-white">
-          <div className="w-full">
-            <table className="w-full table-auto justify-between">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-4 py-2 text-left">Category</th>
-                  <th className="px-4 py-2 text-left">Status</th>
-                  {/* <th className="px-4 py-2 text-left"></th> */}
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.map((task: any, index) => {
+        )}
+        <section className="container font-mono min-h-screen">
+          <div className="w-full mb-8 rounded-lg shadow-lg bg-white">
+            <div className="w-full">
+              <table className="w-full table-auto justify-between">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Category</th>
+                    <th className="px-4 py-2 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((task, index) => {
                     const categoryName = task.category;
-                    let showCategory = true;
-
-                    // Check if the category has already been displayed
-                    if (
-                      index > 0 &&
-                      (data[index - 1] as { category: string })?.category ===
-                        categoryName
-                    ) {
-                      showCategory = false;
-                    }
+                    let showCategory =
+                      index === 0 || task.category !== data[index - 1].category;
 
                     return (
                       <React.Fragment key={task._id}>
                         {showCategory && (
                           <tr className="bg-red-300 font-bold text-lg">
-                            <td colSpan={3} className="px-4 py-2">
+                            <td colSpan={2} className="px-4 py-2">
                               {categoryName}
                             </td>
                           </tr>
@@ -193,85 +273,24 @@ function CheckSingleEmployeeUpdate() {
                                 <p className="font-semibold text-black">
                                   {task.task}
                                 </p>
-                                {/* <p className="text-xs text-gray-600">
-                                  Description: {task.description}
-                                </p> */}
-                                {/* <p className="text-xs text-gray-600">
-                                  Deadline: {task.deadline}
-                                </p> */}
-
-                                {/* <p className="text-xs text-gray-600">
-                                  Department: {task.department}
-                                </p> */}
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-2 w-3/6 flex gap-1">
-                            {/* {task.solutions.map(
-                              (solution: any, index: number) => (
-                                <div
-                                  key={index}
-                                  className="bg-white rounded-lg p-3 border  border-gray-300"
-                                >
-                                  <p className="text-sm">
-                                    {index + 1}. <strong>Name:</strong>{' '}
-                                    {solution.name} &nbsp;{' '}
-                                    <strong>Reply:</strong> {solution.solution}
-                                  </p>
-                                  <p className="text-xs text-gray-600">
-                                    <strong>Status:</strong> {solution.Status}{' '}
-                                    &nbsp; <strong>Date:</strong>{' '}
-                                    {solution.Date?.substring(0, 10)}
-                                  </p>
-                                </div>
-                              )
-                            )} */}
-                            {/* {task.solutions} */}
-                            {/* Replies */}
+                          <td className="px-4 py-2 w-3/6">
                             <p className="text-xs text-gray-600">
                               {task.status}
                             </p>
                           </td>
-                          {/* <td className="px-4 py-2 text-xs cursor-pointer bg-green-50">
-                            <details>
-                              <summary className="text-sm">Update</summary>
-                              <article className="p-2 flex justify-between gap-1">
-                                <Link
-                                  to={`/dashboard/edittask/${task._id}`}
-                                  className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none"
-                                >
-                                  Edit
-                                </Link>
-                                <button
-                                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 focus:outline-none"
-                                  onClick={() => deletetask(task._id)}
-                                >
-                                  Delete
-                                </button>
-                                {task.status !== 'completed' ? (
-                                  <button
-                                    className="bg-green-500 text-white p-2 rounded hover:bg-green-600 focus:outline-none"
-                                    onClick={() => changetaskStatus(task._id)}
-                                  >
-                                    Mark as Completed
-                                  </button>
-                                ) : null}
-                              </article>
-                            </details>
-                          </td> */}
                         </tr>
                       </React.Fragment>
                     );
                   })}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
-      {/* <div className="bg-white shadow-lg p-4 rounded-lg flex flex-col items-center justify-center">
-        <h2 className="text-xl font-bold mb-2">{'data.title'}</h2>
-        <p className="text-gray-600">{'data.description'}</p>
-      </div> */}
+        </section>
+      </div>
     </div>
   );
 }
