@@ -207,7 +207,7 @@ const ViewTask: React.FC = () => {
                   {dateAnCOmment.date
                     .toISOString()
                     .split('T')[0]
-                    .split('-')[1] +
+                    .split('-')[2] +
                     '-' +
                     dateAnCOmment.date
                       .toISOString()
