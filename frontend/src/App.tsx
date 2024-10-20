@@ -19,6 +19,7 @@ import ViewTask2 from './Component/Admin/ViewTask2';
 
 import CheckSingleEmployeeUpdate from './Component/Admin/checkSingleEmployeeUpdate';
 import AddDepratment from './Component/Admin/AddDepratment';
+import PrivateAuth from './AuthContext/PrivateAuth';
 
 const App: React.FC = () => {
   return (
@@ -26,7 +27,14 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <Login />
+              </>
+            }
+          />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="add-department" element={<AddDepratment />} />
             <Route path="" element={<Maindashboard />} />

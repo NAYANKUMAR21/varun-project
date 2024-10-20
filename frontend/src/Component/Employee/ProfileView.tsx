@@ -1,12 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
+import { useContext } from 'react';
+import { AuthContext } from '../../AuthContext/AuthContextProvider';
 
 const ProfileView = () => {
   // Dummy data
 
   const profiles = JSON.parse(localStorage.getItem('employee') || 'null');
-
+  const value = useContext(AuthContext) as {
+    employeeLogged: any;
+    setEmployeeLogged: any;
+  };
   console.log(profiles);
-
+  const navigate = useNavigate();
   const profile = {
     name: profiles.name,
     email: profiles.email,
@@ -85,8 +91,9 @@ const ProfileView = () => {
                 type="button"
                 className="h-9 w-20 rounded bg-gray-900 text-white"
                 onClick={() => {
-                  window.location.href = '/';
                   localStorage.removeItem('employee');
+                  value.setEmployeeLogged('');
+                  navigate('/');
                 }}
               >
                 Logout

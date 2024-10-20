@@ -16,10 +16,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
           <div className="flex space-x-4">
-            <a
-              href="/signin"
-              className="text-black px-3 py-2 rounded font-serif"
-            >
+            <a href="/" className="text-black px-3 py-2 rounded font-serif">
               Admin DashBoard
             </a>
           </div>

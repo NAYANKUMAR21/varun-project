@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosAPI } from '../../AxiosApi';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext/AuthContextProvider';
 
 const getDepartments = async () => {
   try {
@@ -14,6 +15,11 @@ const getDepartments = async () => {
   }
 };
 const Login: React.FC = () => {
+  const value = useContext(AuthContext) as {
+    Name: string;
+    isLoggedAdmin: boolean;
+    employeeLogged: any;
+  };
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -37,7 +43,10 @@ const Login: React.FC = () => {
     try {
       if (data.email === 'admin@gmail.com' || data.password === 'admin') {
         const res = await AxiosAPI.post('admin/login', data);
+
         console.log(res.data);
+
+        localStorage.setItem('admin', JSON.stringify(res.data));
         toast.success('Login Success');
         navigate('/dashboard');
       } else {
@@ -65,6 +74,12 @@ const Login: React.FC = () => {
     };
     depts();
   }, []);
+  if (value.employeeLogged) {
+    const employee = localStorage.getItem('employee');
+    console.log(value.employeeLogged, employee);
+    navigate('/viewtasks');
+    return;
+  }
   return (
     <div>
       {/* Navbar */}
