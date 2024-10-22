@@ -77,7 +77,6 @@ const Login: React.FC = () => {
   const handleNavigate = (route: string) => {
     navigate(route);
   };
-  
 
   return (
     <div>
@@ -94,14 +93,14 @@ const Login: React.FC = () => {
               alt="aques-symbol"
             />
           </div>
-          <div className="flex space-x-4 text-black">
+          {/* <div className="flex space-x-4 text-black">
             <Link
               to="/signin"
               className={`text-black  px-3 py-2 rounded font-serif`}
             >
               Sign In
             </Link>
-          </div>
+          </div> */}
         </div>
       </nav>
 

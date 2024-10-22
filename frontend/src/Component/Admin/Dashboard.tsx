@@ -3,9 +3,11 @@ import { Outlet } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
+  
   return (
     <div className="">
       {/* Navbar */}
+
       <nav className="text-black fixed w-full z-10 transition-colors duration-300 bg-white">
         <div className="container mx-auto flex justify-between items-center ">
           <div className="text-white text-2xl font-bold font-serif">
@@ -16,9 +18,11 @@ const Dashboard: React.FC = () => {
             />
           </div>
           <div className="flex space-x-4">
-            <a href="/" className="text-black px-3 py-2 rounded font-serif">
+            <Link to="/dashboard">
+              {/* <a href="/" className="text-black px-3 py-2 rounded font-serif"> */}
               Admin DashBoard
-            </a>
+              {/* </a> */}
+            </Link>
           </div>
         </div>
       </nav>

@@ -13,6 +13,8 @@ const getAllDepts = async () => {
 };
 
 export default function AddDepratment() {
+  const [addDepthCheckList, setaddDepthCheckList] = useState<boolean>(false);
+
   const [deptName, setDeptname] = useState<string>('');
   const [Alldepts, setAlldepts] = useState<{ Name: 'string' }[]>([]);
   const [EditName, setEditName] = useState<boolean>(false);
@@ -24,7 +26,6 @@ export default function AddDepratment() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      setEditName(false);
       if (deptName === '') {
         return toast('OOPS: Department Feild is Empty...');
       }
@@ -33,6 +34,8 @@ export default function AddDepratment() {
       });
       console.log(response);
       setAlldepts([...response.data.data]);
+      setaddDepthCheckList(false);
+      setDeptname('');
       // navigate('/dashboard/addemployee');
     } catch (error) {
       console.log(error);
@@ -47,14 +50,14 @@ export default function AddDepratment() {
       console.log(er.message);
     }
   };
-  const handleEdit = async (id: string) => {
-    const singleData = Alldepts.filter((ele: any) => {
-      return ele._id === id;
-    });
-    setDeptname(singleData[0].Name);
-    setEditName(true);
-    setEditId(id);
-  };
+  // const handleEdit = async (id: string) => {
+  //   const singleData = Alldepts.filter((ele: any) => {
+  //     return ele._id === id;
+  //   });
+  //   setDeptname(singleData[0].Name);
+  //   setEditName(true);
+  //   setEditId(id);
+  // };
   const HandleEditUpdate = async () => {
     try {
       setEditId('');
@@ -88,75 +91,87 @@ export default function AddDepratment() {
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-          {/* Form Section */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <h2 className="text-2xl font-bold text-center text-gray-800">
-              Add Department
-            </h2>
-
-            <div>
-              <label
-                htmlFor="empID"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Enter Department name:
-              </label>
-              <input
-                type="text"
-                value={deptName}
-                className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg outline-none text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onChange={handleChange}
-              />
-            </div>
-
-            {EditName ? (
-              <div className="flex justify-between items-center">
-                <div>
+        <div className="w-full max-w-4xl p-4">
+          {!addDepthCheckList ? (
+            Alldepts && (
+              <div className="mt-8">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium text-gray-800">
+                    Departments List
+                  </h3>
                   <button
-                    onClick={HandleEditUpdate}
+                    className="text-2xl text-blue-600 hover:text-blue-700 transition duration-300"
+                    onClick={() => setaddDepthCheckList(true)}
+                  >
+                    ✚
+                  </button>
+                </div>
+
+                <div className="space-y-4 mt-4">
+                  {Alldepts.map((ele: any) => (
+                    <div
+                      key={ele._id}
+                      className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm"
+                    >
+                      <div>{ele.Name}</div>
+                      <div>
+                        <button
+                          onClick={() => handleDelete(ele._id)}
+                          className="mr-4"
+                        >
+                          🗑️
+                        </button>
+                        {/* <button onClick={() => handleEdit(ele._id)}>✏️</button> */}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          ) : (
+            <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+              {/* Form Section */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <h2 className="text-2xl font-bold text-center text-gray-800">
+                  Add Department
+                </h2>
+
+                <div>
+                  <label
+                    htmlFor="empID"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Enter Department name:
+                  </label>
+                  <input
+                    type="text"
+                    value={deptName}
+                    className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg outline-none text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {EditName ? (
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <button
+                        onClick={HandleEditUpdate}
+                        type="submit"
+                        className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        Update Department
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
                     type="submit"
                     className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    Update Department
+                    Add Department
                   </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                type="submit"
-                className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Add Department
-              </button>
-            )}
-          </form>
-
-          {/* Department List Section */}
-          {Alldepts && (
-            <div className="mt-8">
-              <h3 className="text-lg font-medium text-gray-800">
-                Departments List
-              </h3>
-              <div className="space-y-4 mt-4">
-                {Alldepts.map((ele: any) => (
-                  <div
-                    key={ele._id}
-                    className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm"
-                  >
-                    <div>{ele.Name}</div>
-                    <div>
-                      <button
-                        onClick={() => handleDelete(ele._id)}
-                        className="mr-4"
-                      >
-                        🗑️
-                      </button>
-                      <button onClick={() => handleEdit(ele._id)}>✏️</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                )}
+              </form>
             </div>
           )}
         </div>
