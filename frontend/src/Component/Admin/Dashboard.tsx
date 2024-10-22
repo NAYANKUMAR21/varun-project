@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  
+  const [greeting, setGreeting] = useState('');
+
+  useEffect(() => {
+    const date = new Date();
+    const currentHour = date.getUTCHours() - 5; // Convert to US Eastern Time (UTC-5)
+
+    if (currentHour >= 0 && currentHour < 12) {
+      setGreeting('Good Morning');
+    } else if (currentHour >= 12 && currentHour < 17) {
+      setGreeting('Good Afternoon');
+    } else {
+      setGreeting('Good Evening');
+    }
+  }, []);
   return (
     <div className="">
       {/* Navbar */}
@@ -31,7 +44,9 @@ const Dashboard: React.FC = () => {
       <div className="flex">
         <div className="w-1/6 bg-slate-600 min-h-screen h-full fixed top-10 pt-20 border border-black">
           <div className="p-4">
-            <h1 className="text-white text-2xl font-serif underline">Admin</h1>
+            <h1 className="text-white text-2xl font-serif">
+              {greeting} Admin...
+            </h1>
             <ul className="mt-4 space-y-4">
               {/* Sidebar Links */}
               <li className="text-white font-serif">
@@ -41,7 +56,7 @@ const Dashboard: React.FC = () => {
                 <Link to="/dashboard/add-department">
                   {/* Employee Updated Tasks */}
                   {/* Employee Task Update Log */}
-                  Add Department
+                  Department's
                 </Link>
               </li>
               <li className="text-white font-serif">

@@ -18,6 +18,8 @@ interface Task {
   _id: string; // MongoDB ObjectId as a string
 }
 const ViewTask: React.FC = () => {
+  const [greeting, setGreeting] = useState('');
+
   const [loader, setLoader] = useState(true);
   const employee = localStorage.getItem('employee');
 
@@ -49,6 +51,16 @@ const ViewTask: React.FC = () => {
 
   useEffect(() => {
     getTasks();
+    const date = new Date();
+    const currentHour = date.getUTCHours() - 5; // Convert to US Eastern Time (UTC-5)
+
+    if (currentHour >= 0 && currentHour < 12) {
+      setGreeting('Good Morning');
+    } else if (currentHour >= 12 && currentHour < 17) {
+      setGreeting('Good Afternoon');
+    } else {
+      setGreeting('Good Evening');
+    }
   }, []);
 
   // reply for the task
@@ -114,6 +126,9 @@ const ViewTask: React.FC = () => {
         <section className="container mx-auto p-6 font-mono mt-16">
           <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
             <div className="w-full overflow-x-auto">
+              <h1 className="text-black text-2xl font-serif mb-5">
+                {greeting} {employeeData.name}...
+              </h1>
               <table className="w-full">
                 <thead>
                   <tr>

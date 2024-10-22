@@ -270,6 +270,9 @@ function CheckSingleEmployeeUpdate() {
                           <td className="px-4 py-2 w-2/6">
                             <div className="flex items-center text-sm">
                               <div>
+                                {/* 
+
+                                 */}
                                 <p className="font-semibold text-black">
                                   {task.task}
                                 </p>
@@ -277,7 +280,9 @@ function CheckSingleEmployeeUpdate() {
                             </div>
                           </td>
                           <td className="px-4 py-2 w-3/6">
-                            <p className="text-xs text-gray-600">
+                            <p
+                              className={`text-xs text-gray-600 ${task.status == 'Completed' ? 'text-green-600' : task.status == 'Incomplete' ? 'text-red-600' : 'text-yellow-600'}`}
+                            >
                               {task.status}
                             </p>
                           </td>

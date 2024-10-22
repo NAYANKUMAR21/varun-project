@@ -13,7 +13,7 @@ function Navbar({
       >
         <div className="container mx-auto mb-2 flex justify-between items-center ">
           <div className={` text-xl font-bold font-serif`}>
-            <Link to="/employee">
+            <Link to="/">
               <img
                 className="w-60 h-30"
                 src="https://www.aequs.com/wp-content/uploads/2021/06/Aequs-Logo-new.png"

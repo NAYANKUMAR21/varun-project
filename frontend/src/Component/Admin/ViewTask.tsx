@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { AxiosAPI } from '../../AxiosApi';
 
 const ViewTask: React.FC = () => {
+  const [greeting, setGreeting] = useState('');
+
   const [data, setData] = useState([]);
 
   const getTasks = async () => {
@@ -20,6 +22,16 @@ const ViewTask: React.FC = () => {
 
   useEffect(() => {
     getTasks();
+    const date = new Date();
+    const currentHour = date.getUTCHours() - 5; // Convert to US Eastern Time (UTC-5)
+
+    if (currentHour >= 0 && currentHour < 12) {
+      setGreeting('Good Morning');
+    } else if (currentHour >= 12 && currentHour < 17) {
+      setGreeting('Good Afternoon');
+    } else {
+      setGreeting('Good Evening');
+    }
   }, []);
 
   const changetaskStatus = async (id: any) => {

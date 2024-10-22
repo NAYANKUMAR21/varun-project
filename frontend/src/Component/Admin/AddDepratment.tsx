@@ -50,14 +50,15 @@ export default function AddDepratment() {
       console.log(er.message);
     }
   };
-  // const handleEdit = async (id: string) => {
-  //   const singleData = Alldepts.filter((ele: any) => {
-  //     return ele._id === id;
-  //   });
-  //   setDeptname(singleData[0].Name);
-  //   setEditName(true);
-  //   setEditId(id);
-  // };
+  const handleEdit = async (id: string) => {
+    const singleData = Alldepts.filter((ele: any) => {
+      return ele._id === id;
+    });
+    setDeptname(singleData[0].Name);
+    setEditName(true);
+    setEditId(id);
+    setaddDepthCheckList(true);
+  };
   const HandleEditUpdate = async () => {
     try {
       setEditId('');
@@ -76,6 +77,7 @@ export default function AddDepratment() {
       setDeptname('');
       setEditName(false);
       setEditId('');
+      setaddDepthCheckList(false);
     } catch (er: any) {
       console.log(er.message);
     }
@@ -121,7 +123,7 @@ export default function AddDepratment() {
                         >
                           🗑️
                         </button>
-                        {/* <button onClick={() => handleEdit(ele._id)}>✏️</button> */}
+                        <button onClick={() => handleEdit(ele._id)}>✏️</button>
                       </div>
                     </div>
                   ))}
