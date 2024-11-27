@@ -45,6 +45,9 @@ interface EmployeeData {
 
 function CheckSingleEmployeeUpdate() {
   const refComponent = useRef<HTMLDivElement | null>(null);
+  const { id, id2 } = useParams();
+  const [data, setData] = useState<TaskEach[]>([]);
+  const [loader, setLoader] = useState(false);
 
   const handlePrint = () => {
     console.log('handlePrint function called');
@@ -137,9 +140,6 @@ function CheckSingleEmployeeUpdate() {
     };
   };
 
-  const { id, id2 } = useParams();
-  const [data, setData] = useState<TaskEach[]>([]);
-  const [loader, setLoader] = useState(false);
   const [EmpDetails, SetEmpDetails] = useState<EmployeeData>({
     name: '',
     department: '',
@@ -156,11 +156,12 @@ function CheckSingleEmployeeUpdate() {
       const response = await AxiosAPI.get(
         `admin/get-task-update-of-single-user/${id}/${id2}`
       );
+
       setLoader(false);
       setData(response.data.data);
 
       const NameEmp = response.data.data[0]?.solutions.filter(
-        (ele: Solution) => ele.employee.employeeId === id2
+        (ele: Solution) => ele.employee.employeeId == id2
       )[0];
 
       const categories = [...new Set(data.map((task) => task.category))];
@@ -227,7 +228,7 @@ function CheckSingleEmployeeUpdate() {
                   <div>
                     <span className="text-gray-500">Comment:</span>
                     <span className="text-gray-800 ml-2">
-                      {EmpDetails.comment}
+                      XYZ {EmpDetails.comment}
                     </span>
                   </div>
                 </div>
@@ -281,7 +282,13 @@ function CheckSingleEmployeeUpdate() {
                           </td>
                           <td className="px-4 py-2 w-3/6">
                             <p
-                              className={`text-xs text-gray-600 ${task.status == 'Completed' ? 'text-green-600' : task.status == 'Incomplete' ? 'text-red-600' : 'text-yellow-600'}`}
+                              className={`text-xs text-gray-600 ${
+                                task.status == 'Completed'
+                                  ? 'text-green-600'
+                                  : task.status == 'Incomplete'
+                                  ? 'text-red-600'
+                                  : 'text-yellow-600'
+                              }`}
                             >
                               {task.status}
                             </p>

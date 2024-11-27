@@ -51,9 +51,15 @@ function ViewTask2() {
   };
   const HandleSearchId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const copy = [...mainData.search];
+    console.log(copy);
     const x = copy.filter((item: any) => {
       console.log(typeof item, item);
-      return item.employeeInfo.employeeId.includes(e.target.value);
+      return (
+        item.employeeInfo.employeeId.includes(e.target.value) ||
+        item.employeeInfo.department
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase())
+      );
     });
     if (e.target.value == '') {
       return setMainData({ ...mainData, data: copy });
@@ -93,7 +99,7 @@ function ViewTask2() {
             <input
               id="input"
               type="text"
-              placeholder="Search by Id..."
+              placeholder="Search by Id or Dept..."
               onChange={HandleSearchId}
               className="ml-5 mr-5 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
             />

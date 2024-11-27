@@ -178,14 +178,14 @@ const ViewTask: React.FC = () => {
                               <select
                                 name="status"
                                 id=""
-                                value={task.status}
+                                // value={task.status}
                                 className="w-full h-8 border"
                                 // value={task.status}
                                 onChange={(e: any) =>
                                   handleSetStatus(task._id, e.target.value)
                                 }
                               >
-                                {/* <option value="">none</option> */}
+                                <option value="None">None</option>
                                 <option value="Partial">Partial</option>
                                 <option value="Completed">Complete</option>
                                 <option value="Incomplete">Incomplete</option>
