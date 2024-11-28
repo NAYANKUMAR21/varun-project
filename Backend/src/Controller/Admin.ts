@@ -548,6 +548,76 @@ router.get(
 
 router.get('/get-task-updates', async (req, res) => {
   try {
+    // const updatedTasks = await Task.find(
+    //   {
+    //     status: {
+    //       $in: ['Completed', 'Partial', 'Incomplete'],
+    //     },
+    //     solutions: {
+    //       $exists: true,
+    //       $not: { $size: 0 },
+    //     },
+    //   },
+    //   { solutions: 1 }
+    // ).populate('solutions.employee');
+    // const getUpdatedTasks = await Task.aggregate([
+    //   {
+    //     $match: {
+    //       status: { $in: ['Completed', 'Partial', 'Incomplete'] },
+    //     },
+    //   },
+    //   {
+    //     $unwind: '$solutions',
+    //   },
+    //   {
+    //     // Match solutions with DateAdded before the deadline
+    //     $match: {
+    //       $expr: {
+    //         $lt: ['$solutions.DateAdded', '$deadline'], // DateAdded < deadline
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: {
+    //         employee: '$solutions.employee',
+    //         dateAdded: '$solutions.DateAdded', // Group by DateAdded
+    //       },
+    //       count: { $sum: 1 }, // Count occurrences
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'employees',
+    //       localField: '_id.employee',
+    //       foreignField: '_id',
+    //       as: 'employeeDetails',
+    //     },
+    //   },
+    //   {
+    //     $unwind: {
+    //       path: '$employeeDetails',
+    //       preserveNullAndEmptyArrays: true, // Optional: Keep documents without matching employees
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0, // Exclude the default _id field from the output
+    //       count: 1, // Include the count
+    //       DateAdded: '$_id.dateAdded', // Include DateAdded
+    //       employeeId: '$_id.employee', // Include employeeId
+    //       employeeInfo: {
+    //         _id: '$employeeDetails._id', // Include employee _id
+    //         name: '$employeeDetails.name', // Include employee name
+    //         email: '$employeeDetails.email', // Include employee email
+    //         employeeId: '$employeeDetails.employeeId', // Include employeeId
+    //         department: '$employeeDetails.department', // Include department
+    //         __v: '$employeeDetails.__v', // Include version key
+    //       },
+    //     },
+    //   },
+    // ]);
+
     const getUpdatedTasks = await Task.aggregate([
       {
         $match: {
@@ -598,6 +668,11 @@ router.get('/get-task-updates', async (req, res) => {
             department: '$employeeDetails.department', // Include department
             __v: '$employeeDetails.__v', // Include version key
           },
+        },
+      },
+      {
+        $sort: {
+          createdAt: 1, // Sort by createdAt in -1 for descending and 1 for ascendings  order
         },
       },
     ]);
