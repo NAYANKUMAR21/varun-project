@@ -1,3 +1,6 @@
+import handlebars from 'handlebars';
+import fs from 'fs';
+import path from 'path';
 import Router from 'express';
 import e, { Request, Response, NextFunction } from 'express';
 import Employee from '../Model/Employee';
@@ -8,6 +11,8 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb'; // Add this import statement
 import mongoose from 'mongoose';
 import formatDate from '../utils/dateConverter';
+import DepartmentModel from '../Model/Department';
+import transporter, { mailOptions } from '../utils/mailService';
 const router = Router();
 
 // EditTask
@@ -255,7 +260,7 @@ router.post(
 
 router.post('/update-all-at-once/:empId', async (req, res) => {
   const { empId } = req.params; // mongoose _id should be sent as params
-  const { data, comment, date } = req.body;
+  const { data: taskUpdates, comment, date } = req.body;
 
   try {
     console.log('This is date', date);
@@ -266,12 +271,30 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
         message: 'Invalid employee',
       });
     }
+    const getEntryNumber = await DepartmentModel.findOne(
+      {
+        Name: employee.department,
+      },
+      { entryNumber: 1 }
+    );
+
+    await Employee.findOneAndUpdate(
+      { employeeId: empId },
+      {
+        $push: { entryNumberByEmployee: getEntryNumber?.entryNumber },
+      },
+      {
+        new: true,
+      }
+    );
+
     const DateConvert = new Date(date).toISOString().split('T')[0];
 
     console.log('DateConvert', DateConvert);
     console.log(new Date().getTime());
-    const result = data.map(async (update: any) => {
-      // console.log(update);
+    const result = taskUpdates.map(async (update: any) => {
+      console.log('update: ', update);
+
       await Task.updateOne(
         { _id: update._id },
         {
@@ -282,14 +305,51 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
               DateAdded: DateConvert,
               comment: comment,
               createdAt: new Date().getMilliseconds(),
+              entryNumber: getEntryNumber?.entryNumber || 0,
             },
           },
         }
       );
     });
 
+    await DepartmentModel.updateOne(
+      {
+        Name: employee.department,
+      },
+      { $inc: { entryNumber: 1 } }
+    );
     await Promise.all(result);
 
+    const loadTemplate = (templateName: any, data: any) => {
+      const filePath = path.join(
+        __dirname,
+        `../Mail_Template/${templateName}.html`
+      );
+      const templateSource = fs.readFileSync(filePath, 'utf-8');
+      const template = handlebars.compile(templateSource);
+      return template(data);
+    };
+    const templateData = {
+      name: employee.name,
+      employeeId: empId,
+      department: employee.department,
+    };
+    const emailContent = loadTemplate('template', templateData);
+
+    let mailOptions = {
+      from: 'naayaankumar@gmail.com', // sender address
+      to: ['naayaankumar@gmail.com', 'varunpatil4498@gmail.com'], // list of receivers
+      subject: 'Aques Task Update', // Subject line
+      html: emailContent, // HTML body (optional)
+    };
+
+    transporter.sendMail(mailOptions, (err: any, info: any) => {
+      if (err) {
+        console.error('Error occurred: ', err);
+        return;
+      }
+      console.log('Email sent: ', info.response);
+    });
     return res.status(200).json({
       message: 'Tasks updated successfully',
       success: true,

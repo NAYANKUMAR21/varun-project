@@ -18,6 +18,7 @@ interface Solution {
   DateAdded: string;
   employee: Employee;
   _id: string;
+  entryNumber: number;
 }
 
 interface TaskEach {
@@ -159,9 +160,9 @@ function CheckSingleEmployeeUpdate() {
 
       setLoader(false);
       setData(response.data.data);
-
+      console.log(response.data.entryNumber);
       const NameEmp = response.data.data[0]?.solutions.filter(
-        (ele: Solution) => ele.employee.employeeId == id2
+        (ele: Solution) => ele.entryNumber == response.data.entryNumber
       )[0];
 
       const categories = [...new Set(data.map((task) => task.category))];

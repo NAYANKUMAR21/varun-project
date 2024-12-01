@@ -5,6 +5,7 @@ export interface IEmployee extends mongoose.Document {
   email: string;
   employeeId: string;
   department: string;
+  entryNumberByEmployee: [];
 }
 
 const EmployeeSchema = new mongoose.Schema({
@@ -12,6 +13,7 @@ const EmployeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  entryNumberByEmployee: [{ type: Number }],
   email: {
     type: String,
     required: true,

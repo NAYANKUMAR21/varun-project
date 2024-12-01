@@ -35,7 +35,7 @@ const ViewTask: React.FC = () => {
   });
 
   const [data, setData] = useState<Task[]>([]);
-
+  const [countDataUpdate, setCountDataUpdated] = useState<number>(0);
   const getTasks = async () => {
     try {
       setLoader(true);
@@ -66,6 +66,9 @@ const ViewTask: React.FC = () => {
   // reply for the task
 
   const handleUpdateAllAtOnce = async () => {
+    if (countDataUpdate <= 0) {
+      return toast.error('Update Atleast Single Task..');
+    }
     const empId = employeeData.employeeId;
 
     console.log(empId);
@@ -93,6 +96,7 @@ const ViewTask: React.FC = () => {
       return ele;
     });
     console.log(result);
+    setCountDataUpdated((prev) => prev + 1);
     setData(result);
   };
 

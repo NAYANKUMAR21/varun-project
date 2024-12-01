@@ -15,7 +15,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditTask from './Component/Admin/EditTask';
 import Maindashboard from './Component/Admin/Maindashboard';
-import ViewTask2 from './Component/Admin/ViewTask2';
+import ViewTask2 from './Component/Admin/TaskSummary';
 
 import CheckSingleEmployeeUpdate from './Component/Admin/checkSingleEmployeeUpdate';
 import AddDepratment from './Component/Admin/AddDepratment';

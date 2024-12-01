@@ -12,6 +12,7 @@ import path from 'path';
 import fs from 'fs';
 import formatDate from '../utils/dateConverter';
 import DepartmentModel from '../Model/Department';
+import transporter, { mailOptions } from '../utils/mailService';
 
 const router = Router();
 
@@ -293,7 +294,7 @@ router.delete(
   }
 );
 
-// add task to all employess
+// add task
 router.post(
   '/add-task',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -548,76 +549,6 @@ router.get(
 
 router.get('/get-task-updates', async (req, res) => {
   try {
-    // const updatedTasks = await Task.find(
-    //   {
-    //     status: {
-    //       $in: ['Completed', 'Partial', 'Incomplete'],
-    //     },
-    //     solutions: {
-    //       $exists: true,
-    //       $not: { $size: 0 },
-    //     },
-    //   },
-    //   { solutions: 1 }
-    // ).populate('solutions.employee');
-    // const getUpdatedTasks = await Task.aggregate([
-    //   {
-    //     $match: {
-    //       status: { $in: ['Completed', 'Partial', 'Incomplete'] },
-    //     },
-    //   },
-    //   {
-    //     $unwind: '$solutions',
-    //   },
-    //   {
-    //     // Match solutions with DateAdded before the deadline
-    //     $match: {
-    //       $expr: {
-    //         $lt: ['$solutions.DateAdded', '$deadline'], // DateAdded < deadline
-    //       },
-    //     },
-    //   },
-    //   {
-    //     $group: {
-    //       _id: {
-    //         employee: '$solutions.employee',
-    //         dateAdded: '$solutions.DateAdded', // Group by DateAdded
-    //       },
-    //       count: { $sum: 1 }, // Count occurrences
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'employees',
-    //       localField: '_id.employee',
-    //       foreignField: '_id',
-    //       as: 'employeeDetails',
-    //     },
-    //   },
-    //   {
-    //     $unwind: {
-    //       path: '$employeeDetails',
-    //       preserveNullAndEmptyArrays: true, // Optional: Keep documents without matching employees
-    //     },
-    //   },
-    //   {
-    //     $project: {
-    //       _id: 0, // Exclude the default _id field from the output
-    //       count: 1, // Include the count
-    //       DateAdded: '$_id.dateAdded', // Include DateAdded
-    //       employeeId: '$_id.employee', // Include employeeId
-    //       employeeInfo: {
-    //         _id: '$employeeDetails._id', // Include employee _id
-    //         name: '$employeeDetails.name', // Include employee name
-    //         email: '$employeeDetails.email', // Include employee email
-    //         employeeId: '$employeeDetails.employeeId', // Include employeeId
-    //         department: '$employeeDetails.department', // Include department
-    //         __v: '$employeeDetails.__v', // Include version key
-    //       },
-    //     },
-    //   },
-    // ]);
-
     const getUpdatedTasks = await Task.aggregate([
       {
         $match: {
@@ -677,7 +608,7 @@ router.get('/get-task-updates', async (req, res) => {
       },
     ]);
 
-    console.log(getUpdatedTasks);
+    console.log('getUpdatedTasks: ', getUpdatedTasks);
 
     return res.status(200).json({
       success: true,
@@ -698,18 +629,44 @@ router.get(
   async (req, res) => {
     try {
       const { employee_id, empUId } = req.params;
-      console.log(employee_id, empUId);
-      // tasks for today which are less than the deadline
+
       const DateConvert = new Date().toISOString().split('T')[0];
+
+      const getDeptNamefromUser = await Employee.findOne(
+        { _id: employee_id },
+        {
+          department: 1,
+          entryNumberByEmployee: 1,
+        }
+      );
+
+      // const getEntryNumber = await DepartmentModel.findOne(
+      //   {
+      //     Name: getDeptNamefromUser?.department,
+      //   },
+      //   { entryNumber: 1 }
+      // );
+      const entryArrayLength = getDeptNamefromUser?.entryNumberByEmployee ?? [];
+      const targetEntryNumber =
+        entryArrayLength.length === 0
+          ? 0
+          : entryArrayLength[entryArrayLength.length - 1];
+
+      console.log('getEntryNumber: ', getDeptNamefromUser);
+      console.log('targetEntryNumber:', targetEntryNumber);
+
+      // Modified query to match solutions array elements with correct entryNumber
       const singleUserdata = await Task.find({
         solutions: {
           $elemMatch: {
+            entryNumber: targetEntryNumber,
             employee: employee_id,
             DateAdded: { $lte: DateConvert },
           },
         },
       }).populate('solutions.employee');
-      const UserInfo = await Employee.find({ _id: employee_id });
+
+      // Rest of your code remains the same...
       const singleUserdata1 = await Task.aggregate([
         {
           $match: {
@@ -748,9 +705,7 @@ router.get(
           },
         },
       ]);
-      console.log(singleUserdata1);
-      console.log(singleUserdata.length);
-      // console.log(singleUserdata);
+
       return res.status(200).send({
         data: singleUserdata,
         name: singleUserdata1[0]?.name,
@@ -759,6 +714,7 @@ router.get(
         count: singleUserdata1[0]?.count,
         success: true,
         message: 'Data fetched successfully..',
+        entryNumber: targetEntryNumber,
       });
     } catch (er) {
       return res.status(500).send({

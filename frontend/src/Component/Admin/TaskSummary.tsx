@@ -20,6 +20,7 @@ function ViewTask2() {
   const getTasks = async () => {
     try {
       const response = await AxiosAPI.get('/admin/get-task-updates');
+
       // console.log(response.data.data);
       // console.log(response.data.data, 'response');
       let x = response.data.data.map((ele: any) => {
@@ -28,11 +29,7 @@ function ViewTask2() {
           createdAt: new Date(ele.createdAt).getMilliseconds(),
         };
       });
-      // console.log(x);
-      // const SortedData = x.sort((a: any, b: any) => {
-      //   console.log('a', a.createdAt, b.createdAt);
-      //   return a.createdAt - b.createdAt;
-      // });
+
       const SortedData = x.reverse();
 
       console.log(SortedData, 'Sorted');
@@ -51,14 +48,13 @@ function ViewTask2() {
   };
   const HandleSearchId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const copy = [...mainData.search];
-    console.log(copy);
     const x = copy.filter((item: any) => {
       console.log(typeof item, item);
       return (
         item.employeeInfo.employeeId.includes(e.target.value) ||
         item.employeeInfo.department
-          .toLowerCase()
-          .includes(e.target.value.toLowerCase())
+          .toLocaleLowerCase()
+          .includes(e.target.value.toLocaleLowerCase())
       );
     });
     if (e.target.value == '') {
@@ -99,7 +95,7 @@ function ViewTask2() {
             <input
               id="input"
               type="text"
-              placeholder="Search by Id or Dept..."
+              placeholder="Search by Id and Dept..."
               onChange={HandleSearchId}
               className="ml-5 mr-5 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
             />
