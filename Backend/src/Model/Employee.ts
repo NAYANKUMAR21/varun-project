@@ -14,6 +14,12 @@ const EmployeeSchema = new mongoose.Schema({
     required: true,
   },
   entryNumberByEmployee: [{ type: Number }],
+  TasksCompleted: {
+    completed: { type: Number, default: 0, require: true },
+    partial: { type: Number, default: 0, require: true },
+    incomplete: { type: Number, default: 0, require: true },
+    total: { type: Number, default: 0, require: true },
+  },
   email: {
     type: String,
     required: true,

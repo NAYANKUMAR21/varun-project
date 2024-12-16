@@ -229,7 +229,7 @@ function CheckSingleEmployeeUpdate() {
                   <div>
                     <span className="text-gray-500">Comment:</span>
                     <span className="text-gray-800 ml-2">
-                      XYZ {EmpDetails.comment}
+                      {EmpDetails.comment}
                     </span>
                   </div>
                 </div>

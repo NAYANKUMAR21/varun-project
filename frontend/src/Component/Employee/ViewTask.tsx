@@ -5,6 +5,7 @@ import { AxiosAPI } from '../../AxiosApi';
 
 import Navbar from '../Navbar/Navbar';
 import Loader from '../loader/Loader';
+import { comment } from 'postcss';
 interface Task {
   category: string;
   createdAt: string; // ISO date string
@@ -33,9 +34,13 @@ const ViewTask: React.FC = () => {
     date: new Date(),
     comment: '',
   });
+  const [completedCount, setCompletedCount] = useState(0);
+  const [incompleteCount, setIncompleteCount] = useState(0);
+  const [partialCount, setPartialCount] = useState(0);
+  const [statusChangeCount, setStatusChangeCount] = useState<number>(0);
 
   const [data, setData] = useState<Task[]>([]);
-  const [countDataUpdate, setCountDataUpdated] = useState<number>(0);
+
   const getTasks = async () => {
     try {
       setLoader(true);
@@ -66,9 +71,20 @@ const ViewTask: React.FC = () => {
   // reply for the task
 
   const handleUpdateAllAtOnce = async () => {
-    if (countDataUpdate <= 0) {
+    if (
+      statusChangeCount <= 0 ||
+      dateAnCOmment.comment == '' ||
+      dateAnCOmment.comment == ' '
+    ) {
       return toast.error('Update Atleast Single Task..');
     }
+
+    console.log('Status change count:', statusChangeCount);
+    console.log('Completed count:', completedCount);
+    console.log('Incomplete count:', incompleteCount);
+    console.log('Partial count:', partialCount);
+    // return;
+
     const empId = employeeData.employeeId;
 
     console.log(empId);
@@ -78,25 +94,80 @@ const ViewTask: React.FC = () => {
         data,
         comment: dateAnCOmment.comment,
         date: new Date(dateAnCOmment.date).toISOString().split('T')[0],
+        countOfCompleted: completedCount,
+        countOfPartial: partialCount,
+        countOfIncomplete: incompleteCount,
       });
       toast.success('Task updated successfully');
+
+      setCompletedCount(0);
+      setPartialCount(0);
+      setIncompleteCount(0);
+      setStatusChangeCount(0);
       getTasks();
     } catch (error) {
       setLoader(false);
+
+      setCompletedCount(0);
+      setPartialCount(0);
+      setIncompleteCount(0);
+      setStatusChangeCount(0);
       toast.error('Failed to update task');
       console.log(error);
     }
   };
   const handleSetStatus = (id: string, status: string) => {
+    console.log(id, status);
+
     const result = data.map((ele: Task) => {
-      console.log(ele);
       if (ele._id === id) {
+        const previousStatus = ele.status;
+
+        // Update the status in the object
         ele.status = status;
+
+        // Update the status change count
+        if (previousStatus === 'None' && ele.status !== 'None') {
+          setStatusChangeCount((prev) => prev + 1); // Increment the count
+        } else if (previousStatus !== 'None' && ele.status === 'None') {
+          setStatusChangeCount((prev) => prev - 1); // Decrement the count
+        }
+
+        // Update the completed count
+        if (previousStatus !== 'Completed' && ele.status === 'Completed') {
+          setCompletedCount((prev) => prev + 1);
+        } else if (
+          previousStatus === 'Completed' &&
+          ele.status !== 'Completed'
+        ) {
+          setCompletedCount((prev) => prev - 1);
+        }
+
+        // Update the incomplete count
+        if (previousStatus !== 'Incomplete' && ele.status === 'Incomplete') {
+          setIncompleteCount((prev) => prev + 1);
+        } else if (
+          previousStatus === 'Incomplete' &&
+          ele.status !== 'Incomplete'
+        ) {
+          setIncompleteCount((prev) => prev - 1);
+        }
+
+        // Update the partial count
+        if (previousStatus !== 'Partial' && ele.status === 'Partial') {
+          setPartialCount((prev) => prev + 1);
+        } else if (previousStatus === 'Partial' && ele.status !== 'Partial') {
+          setPartialCount((prev) => prev - 1);
+        }
       }
       return ele;
     });
-    console.log(result);
-    setCountDataUpdated((prev) => prev + 1);
+
+    console.log('statusChangeCount', statusChangeCount);
+    console.log('Completed count:', completedCount);
+    console.log('Incomplete count:', incompleteCount);
+    console.log('Partial count:', partialCount);
+
     setData(result);
   };
 
@@ -114,6 +185,9 @@ const ViewTask: React.FC = () => {
   //     toast.error('Failed to reply task');
   //   }
   // };
+  const handleReloadForAllTasks = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="">
@@ -129,10 +203,21 @@ const ViewTask: React.FC = () => {
       <div className="p-8 ">
         <section className="container mx-auto p-6 font-mono mt-16">
           <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
-            <div className="w-full overflow-x-auto">
+            <div className="flex justify-between items-center">
               <h1 className="text-black text-2xl font-serif mb-5">
                 {greeting} {employeeData.name}...
               </h1>
+              {/* <div>
+                <button
+                  onClick={handleReloadForAllTasks}
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  Reload
+                </button>
+              </div> */}
+            </div>
+            <div className="w-full overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr>
@@ -155,6 +240,8 @@ const ViewTask: React.FC = () => {
                         showCategory = false;
                       }
 
+                      // Only render if task status is Incomplete
+
                       return (
                         <React.Fragment key={task._id}>
                           {showCategory && (
@@ -174,7 +261,6 @@ const ViewTask: React.FC = () => {
                                   <p className="font-semibold text-black">
                                     {task.task}
                                   </p>
-                                  {/* <p className="text-xs text-gray-600">Developer</p> */}
                                 </div>
                               </div>
                             </td>
@@ -182,18 +268,17 @@ const ViewTask: React.FC = () => {
                               <select
                                 name="status"
                                 id=""
-                                // value={task.status}
                                 className="w-full h-8 border"
-                                // value={task.status}
                                 onChange={(e: any) =>
                                   handleSetStatus(task._id, e.target.value)
                                 }
+                                disabled={task.status !== 'None'}
+                                value={task.status}
                               >
                                 <option value="None">None</option>
                                 <option value="Partial">Partial</option>
                                 <option value="Completed">Complete</option>
                                 <option value="Incomplete">Incomplete</option>
-                                {/* <option value="Pending">Pending</option> */}
                               </select>
                             </td>
                           </tr>
