@@ -272,7 +272,7 @@ const ViewTask: React.FC = () => {
                                 onChange={(e: any) =>
                                   handleSetStatus(task._id, e.target.value)
                                 }
-                                disabled={task.status !== 'None'}
+                                // disabled={task.status !== 'None'}
                                 value={task.status}
                               >
                                 <option value="None">None</option>
