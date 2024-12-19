@@ -81,119 +81,117 @@ function ViewTask2() {
   }, []);
 
   return (
-    <div className="bg-gray-100 border border-black">
-      <div className="bg-gray-100 pt-10">
-        <h1 className="text-3xl  text-left mb-6 text-red-500 pl-5">
-          Task Completion Summary...
-        </h1>{' '}
-        {/* Changed text-center to text-left */}
+    <div className="bg-gray-50 border border-gray-300 shadow-lg rounded-lg">
+      <div className="bg-gray-50 pt-6 pb-4">
+        <h1 className="text-2xl text-left mb-4 text-blue-600 font-semibold pl-5">
+          Task Completion Summary
+        </h1>
       </div>
 
-      <div className="bg-gray-100 h-screen w-full mt-6">
-        <div className=" w-1/4 flex bg-gray-100">
-          <div className="flex flex-col space-y-4">
-            <input
-              id="input"
-              type="text"
-              placeholder="Search by Id and Dept..."
-              onChange={HandleSearchId}
-              className="ml-5 mr-5 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-            />
-          </div>
+      <div className="bg-gray-50 h-auto w-full p-5">
+        <div className="flex space-x-4 mb-6">
+          {/* Search by ID and Department */}
+          <input
+            id="input"
+            type="text"
+            placeholder="Search by ID and Department..."
+            onChange={HandleSearchId}
+            className="border border-gray-300 rounded-md p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+          />
 
-          <div className="flex flex-col space-y-4">
-            <input
-              id="input"
-              type="date"
-              value={date.toISOString().split('T')[0]}
-              onChange={handleSetDate}
-              placeholder="Search by Date... "
-              className="border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-            />
-          </div>
+          {/* Search by Date */}
+          <input
+            id="input"
+            type="date"
+            value={date.toISOString().split('T')[0]}
+            onChange={handleSetDate}
+            className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+          />
         </div>
 
-        <div className="mt-5">
-          <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-center rtl:text-right  dark:text-black-400">
-              <thead className="text-xs uppercase bg-red-500 dark:bg-red-500 dark:text-black">
-                <tr className="text-black">
-                  <th scope="col" className="px-6 py-3">
-                    Sl.No
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Employee Id
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Employee Name
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Employee Dept
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Date
-                  </th>
-
-                  <th scope="col" className="px-6 py-3">
-                    Click
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mainData.data &&
-                  mainData.data.map((item: any, index: number) => {
-                    console.log('Here,', item);
-                    return (
-                      <tr
-                        key={index}
-                        className="border-b bg-white-300 dark:border-gray-700"
+        <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-sm">
+          <table className="w-full text-sm text-left text-gray-700">
+            <thead className="bg-blue-100 text-blue-600 text-xs uppercase font-semibold">
+              <tr>
+                <th scope="col" className="px-4 py-3">
+                  Sl. No
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Employee ID
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Employee Name
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Department
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Completed
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Partial
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Incomplete
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Total Tasks
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Date
+                </th>
+                <th scope="col" className="px-4 py-3">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {mainData.data &&
+                mainData.data.map((item: any, index: number) => (
+                  <tr key={index} className="border-b hover:bg-gray-100">
+                    <td className="px-4 py-2">{index + 1}</td>
+                    <td className="px-4 py-2">
+                      <Link
+                        to={`/single-employee-update/${item.employeeInfo._id}`}
+                        className="text-red-500 hover:underline"
                       >
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
-                        >
-                          <Link
-                            to={`/single-employee-update/${item.employeeInfo._id}`}
-                          >
-                            {index + 1}
-                          </Link>
-                        </th>
-
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
-                        >
-                          <Link
-                            to={`/single-employee-update/${item.employeeInfo._id}`}
-                          >
-                            {item.employeeInfo.employeeId}
-                          </Link>
-                        </th>
-                        <td className="px-6 py-4 hover:cursor-pointer">
-                          {item.employeeInfo.name}
-                        </td>
-                        <td className="px-6 py-4 hover:cursor-pointer">
-                          {item.employeeInfo.department}
-                        </td>
-                        <td className="px-6 py-4 hover:cursor-pointer">
-                          {item.DateAdded.split('-')[1]} -{' '}
-                          {item.DateAdded.split('-')[2]} -{' '}
-                          {item.DateAdded.split('-')[0]}
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <Link
-                            to={`/dashboard/single-employee-update/${item.employeeInfo._id}/${item.employeeInfo.employeeId}`}
-                          >
-                            <button>➡️</button>
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
+                        {item.employeeInfo.employeeId}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-2">{item.employeeInfo.name}</td>
+                    <td className="px-4 py-2">
+                      {item.employeeInfo.department}
+                    </td>
+                    <td className="px-4 py-2">
+                      {item.employeeInfo.TaskCompleted.completed}
+                    </td>
+                    <td className="px-4 py-2">
+                      {item.employeeInfo.TaskCompleted.partial}
+                    </td>
+                    <td className="px-4 py-2">
+                      {item.employeeInfo.TaskCompleted.incomplete}
+                    </td>
+                    <td className="px-4 py-2">
+                      {item.employeeInfo.TaskCompleted.total}
+                    </td>
+                    <td className="px-4 py-2">
+                      {`${item.DateAdded.split('-')[1]}-${
+                        item.DateAdded.split('-')[2]
+                      }-${item.DateAdded.split('-')[0]}`}
+                    </td>
+                    <td className="px-4 py-2">
+                      <Link
+                        to={`/dashboard/single-employee-update/${item.employeeInfo._id}/${item.employeeInfo.employeeId}`}
+                      >
+                        <button className="text-blue-500 hover:underline">
+                          ➡️
+                        </button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -596,6 +596,7 @@ router.get('/get-task-updates', async (req, res) => {
             name: '$employeeDetails.name', // Include employee name
             email: '$employeeDetails.email', // Include employee email
             employeeId: '$employeeDetails.employeeId', // Include employeeId
+            TaskCompleted: '$employeeDetails.TasksCompleted',
             department: '$employeeDetails.department', // Include department
             __v: '$employeeDetails.__v', // Include version key
           },

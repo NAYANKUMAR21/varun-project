@@ -119,7 +119,12 @@ router.get(
         });
       }
 
-      let tasks = await Task.find({ department: Employees.department });
+      let tasks = await Task.find({
+        department: Employees.department,
+      });
+
+      console.log('tasks', tasks);
+
       if (tasks.length === 0) {
         return res.status(400).json({
           success: false,
@@ -260,10 +265,18 @@ router.post(
 
 router.post('/update-all-at-once/:empId', async (req, res) => {
   const { empId } = req.params; // mongoose _id should be sent as params
-  const { data: taskUpdates, comment, date } = req.body;
+  const {
+    data: taskUpdates,
+    comment,
+    date,
+    countOfCompleted,
+    countOfPartial,
+    countOfIncomplete,
+  } = req.body;
 
   try {
     console.log('This is date', date);
+
     const employee = await Employee.findOne({ employeeId: empId });
     if (!employee) {
       return res.status(400).json({
@@ -271,21 +284,29 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
         message: 'Invalid employee',
       });
     }
+    const noOfDocumentsOfTask = await Task.countDocuments({
+      department: employee.department,
+    });
     const getEntryNumber = await DepartmentModel.findOne(
       {
         Name: employee.department,
       },
       { entryNumber: 1 }
     );
+    let count = 0;
 
     await Employee.findOneAndUpdate(
       { employeeId: empId },
       {
         $push: { entryNumberByEmployee: getEntryNumber?.entryNumber },
+        $inc: {
+          'TasksCompleted.completed': countOfCompleted,
+          'TasksCompleted.partial': countOfPartial,
+          'TasksCompleted.incomplete': countOfIncomplete,
+        }, // Increment existing completed count
+        $set: { 'TasksCompleted.total': noOfDocumentsOfTask }, // Set new total
       },
-      {
-        new: true,
-      }
+      { new: true }
     );
 
     const DateConvert = new Date(date).toISOString().split('T')[0];
@@ -293,10 +314,8 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
     console.log('DateConvert', DateConvert);
     console.log(new Date().getTime());
     const result = taskUpdates.map(async (update: any) => {
-      console.log('update: ', update);
-
       await Task.updateOne(
-        { _id: update._id },
+        { _id: update._id, department: employee.department },
         {
           $set: { status: update.status },
           $push: {
@@ -318,6 +337,7 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
       },
       { $inc: { entryNumber: 1 } }
     );
+
     await Promise.all(result);
 
     const loadTemplate = (templateName: any, data: any) => {
@@ -333,12 +353,16 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
       name: employee.name,
       employeeId: empId,
       department: employee.department,
+      complete: countOfCompleted,
+      partial: countOfPartial,
+      incomplete: countOfIncomplete,
+      total: noOfDocumentsOfTask,
     };
     const emailContent = loadTemplate('template', templateData);
 
     let mailOptions = {
-      from: 'naayaankumar@gmail.com', // sender address
-      to: ['naayaankumar@gmail.com', 'varunpatil4498@gmail.com'], // list of receivers
+      from: 'nayanph1@gmail.com', // sender address
+      to: 'naayaankumar@gmail.com', // list of receivers
       subject: 'Aques Task Update', // Subject line
       html: emailContent, // HTML body (optional)
     };
