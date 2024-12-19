@@ -273,7 +273,7 @@ const ViewTask: React.FC = () => {
                                   handleSetStatus(task._id, e.target.value)
                                 }
                                 // disabled={task.status !== 'None'}
-                                value={task.status}
+                                // value={task.status}
                               >
                                 <option value="None">None</option>
                                 <option value="Partial">Partial</option>
