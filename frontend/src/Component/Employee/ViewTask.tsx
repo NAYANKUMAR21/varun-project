@@ -159,7 +159,7 @@ const ViewTask: React.FC = () => {
         } else if (previousStatus === 'Partial' && ele.status !== 'Partial') {
           setPartialCount((prev) => prev - 1);
         }
-      }
+      }How they follow it that when any course they are ahead, they take another course in that hour which they have backlogs for and they complete that. 
       return ele;
     });
 

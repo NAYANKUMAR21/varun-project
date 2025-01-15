@@ -361,8 +361,8 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
     const emailContent = loadTemplate('template', templateData);
 
     let mailOptions = {
-      from: 'nayanph1@gmail.com', // sender address
-      to: 'naayaankumar@gmail.com', // list of receivers
+      from: 'varunpatil4498@gmail.com', // sender address
+      to: 'varunpatil4498@gmail.com', // list of receivers
       subject: 'Aques Task Update', // Subject line
       html: emailContent, // HTML body (optional)
     };
