@@ -76,6 +76,12 @@ function ViewTask2() {
     }
     return setMainData({ ...mainData, data: filteredDate });
   };
+  const handleREsetSort = () => {
+    setMainData({
+      ...mainData,
+      data: mainData.search,
+    });
+  };
   useEffect(() => {
     getTasks();
   }, []);
@@ -94,11 +100,10 @@ function ViewTask2() {
           <input
             id="input"
             type="text"
-            placeholder="Search by ID and Department..."
+            placeholder="Search by ID or Department..."
             onChange={HandleSearchId}
             className="border border-gray-300 rounded-md p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
           />
-
           {/* Search by Date */}
           <input
             id="input"
@@ -107,6 +112,12 @@ function ViewTask2() {
             onChange={handleSetDate}
             className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
           />
+          <button
+            className="bg-blue-500 rounded-lg text-white px-5"
+            onClick={handleREsetSort}
+          >
+            Reset
+          </button>
         </div>
 
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-sm">

@@ -5,7 +5,7 @@ import { AxiosAPI } from '../../AxiosApi';
 
 import Navbar from '../Navbar/Navbar';
 import Loader from '../loader/Loader';
-import { comment } from 'postcss';
+// import { comment } from 'postcss';
 interface Task {
   category: string;
   createdAt: string; // ISO date string
@@ -71,12 +71,18 @@ const ViewTask: React.FC = () => {
   // reply for the task
 
   const handleUpdateAllAtOnce = async () => {
-    if (
-      statusChangeCount <= 0 ||
-      dateAnCOmment.comment == '' ||
-      dateAnCOmment.comment == ' '
-    ) {
+    const checkIfThereIsNone = data.filter((singleTask, index) => {
+      console.log('singleTask', singleTask.status);
+      return singleTask.status == 'None';
+    });
+    if (checkIfThereIsNone.length != 0) {
+      return toast.error('Please make sure there is no None status...');
+    }
+    if (statusChangeCount <= 0) {
       return toast.error('Update Atleast Single Task..');
+    }
+    if (dateAnCOmment.comment == '' || dateAnCOmment.comment == ' ') {
+      return toast.error('Please add Sutable comment...');
     }
 
     console.log('Status change count:', statusChangeCount);
@@ -127,7 +133,7 @@ const ViewTask: React.FC = () => {
         ele.status = status;
 
         // Update the status change count
-        if (previousStatus === 'None' && ele.status !== 'None') {
+        if (ele.status !== 'None') {
           setStatusChangeCount((prev) => prev + 1); // Increment the count
         } else if (previousStatus !== 'None' && ele.status === 'None') {
           setStatusChangeCount((prev) => prev - 1); // Decrement the count
@@ -159,7 +165,8 @@ const ViewTask: React.FC = () => {
         } else if (previousStatus === 'Partial' && ele.status !== 'Partial') {
           setPartialCount((prev) => prev - 1);
         }
-      }How they follow it that when any course they are ahead, they take another course in that hour which they have backlogs for and they complete that. 
+      }
+      // How they follow it that when any course they are ahead, they take another course in that hour which they have backlogs for and they complete that.
       return ele;
     });
 
