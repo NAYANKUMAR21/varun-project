@@ -13,6 +13,7 @@ import mongoose from 'mongoose';
 import formatDate from '../utils/dateConverter';
 import DepartmentModel from '../Model/Department';
 import transporter, { mailOptions } from '../utils/mailService';
+import { latestUpdateModel } from 'Model/Latest_update';
 const router = Router();
 
 // EditTask
@@ -329,6 +330,12 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
           },
         }
       );
+    });
+
+    const LastEntry = await latestUpdateModel.countDocuments({});
+    await latestUpdateModel.create({
+      employeeId: employee._id,
+      slNo: LastEntry,
     });
 
     await DepartmentModel.updateOne(

@@ -13,6 +13,7 @@ import fs from 'fs';
 import formatDate from '../utils/dateConverter';
 import DepartmentModel from '../Model/Department';
 import transporter, { mailOptions } from '../utils/mailService';
+import { latestUpdateModel } from 'Model/Latest_update';
 
 const router = Router();
 
@@ -602,12 +603,11 @@ router.get('/get-task-updates', async (req, res) => {
           },
         },
       },
-      {
-        $sort: {
-          createdAt: 1, // Sort by createdAt in -1 for descending and 1 for ascendings  order
-        },
-      },
     ]);
+    const SortedUpdates = await latestUpdateModel
+      .find({}, {})
+      .sort('slNo')
+      .populate('employeeId');
 
     console.log('getUpdatedTasks: ', getUpdatedTasks);
 

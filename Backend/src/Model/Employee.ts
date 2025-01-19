@@ -15,9 +15,9 @@ const EmployeeSchema = new mongoose.Schema({
   },
   entryNumberByEmployee: [{ type: Number }],
   TasksCompleted: {
-    completed: { type: Number, default: 0, require: true },
-    partial: { type: Number, default: 0, require: true },
-    incomplete: { type: Number, default: 0, require: true },
+    completed: { type: Number, default: 0, require: true, min: 0 },
+    partial: { type: Number, default: 0, require: true, min: 0 },
+    incomplete: { type: Number, default: 0, require: true, min: 0 },
     total: { type: Number, default: 0, require: true },
   },
   email: {

@@ -20,10 +20,8 @@ interface Task {
 }
 const ViewTask: React.FC = () => {
   const [greeting, setGreeting] = useState('');
-
   const [loader, setLoader] = useState(true);
   const employee = localStorage.getItem('employee');
-
   const employeeData = employee ? JSON.parse(employee) : null;
 
   console.log('ep data', employeeData);
@@ -48,38 +46,22 @@ const ViewTask: React.FC = () => {
       setData(response.data.data);
       setLoader(false);
       console.log(response.data.data, 'response');
+      return response.data.data;
     } catch (error) {
       setLoader(false);
       toast.error('Failed to fetch tasks');
     }
   };
 
-  useEffect(() => {
-    getTasks();
-    const date = new Date();
-    const currentHour = date.getUTCHours() - 5; // Convert to US Eastern Time (UTC-5)
-
-    if (currentHour >= 0 && currentHour < 12) {
-      setGreeting('Good Morning');
-    } else if (currentHour >= 12 && currentHour < 17) {
-      setGreeting('Good Afternoon');
-    } else {
-      setGreeting('Good Evening');
-    }
-  }, []);
-
   // reply for the task
 
   const handleUpdateAllAtOnce = async () => {
-    const checkIfThereIsNone = data.filter((singleTask, index) => {
+    const checkIfThereIsNone = data.filter((singleTask) => {
       console.log('singleTask', singleTask.status);
       return singleTask.status == 'None';
     });
     if (checkIfThereIsNone.length != 0) {
       return toast.error('Please make sure there is no None status...');
-    }
-    if (statusChangeCount <= 0) {
-      return toast.error('Update Atleast Single Task..');
     }
     if (dateAnCOmment.comment == '' || dateAnCOmment.comment == ' ') {
       return toast.error('Please add Sutable comment...');
@@ -122,61 +104,85 @@ const ViewTask: React.FC = () => {
       console.log(error);
     }
   };
-  const handleSetStatus = (id: string, status: string) => {
+  const handleSetStatus = (id: string, newStatus: string) => {
     console.log(id, status);
-
     const result = data.map((ele: Task) => {
       if (ele._id === id) {
-        const previousStatus = ele.status;
-
-        // Update the status in the object
-        ele.status = status;
-
-        // Update the status change count
-        if (ele.status !== 'None') {
-          setStatusChangeCount((prev) => prev + 1); // Increment the count
-        } else if (previousStatus !== 'None' && ele.status === 'None') {
-          setStatusChangeCount((prev) => prev - 1); // Decrement the count
-        }
-
-        // Update the completed count
-        if (previousStatus !== 'Completed' && ele.status === 'Completed') {
-          setCompletedCount((prev) => prev + 1);
-        } else if (
-          previousStatus === 'Completed' &&
-          ele.status !== 'Completed'
-        ) {
-          setCompletedCount((prev) => prev - 1);
-        }
-
-        // Update the incomplete count
-        if (previousStatus !== 'Incomplete' && ele.status === 'Incomplete') {
-          setIncompleteCount((prev) => prev + 1);
-        } else if (
-          previousStatus === 'Incomplete' &&
-          ele.status !== 'Incomplete'
-        ) {
-          setIncompleteCount((prev) => prev - 1);
-        }
-
-        // Update the partial count
-        if (previousStatus !== 'Partial' && ele.status === 'Partial') {
-          setPartialCount((prev) => prev + 1);
-        } else if (previousStatus === 'Partial' && ele.status !== 'Partial') {
-          setPartialCount((prev) => prev - 1);
+        const oldStatus = ele.status;
+        ele.status = newStatus;
+        if (oldStatus == 'None') {
+          if (newStatus === 'Completed') {
+            setCompletedCount((prev) => prev + 1);
+          } else if (newStatus === 'Partial') {
+            setPartialCount((prev) => prev + 1);
+          } else if (newStatus === 'Incomplete') {
+            setIncompleteCount((prev) => prev + 1);
+          }
+        } else if (oldStatus == 'Completed') {
+          if (newStatus === 'Partial') {
+            setPartialCount((prev) => prev + 1);
+            setCompletedCount((prev) => prev - 1);
+          } else if (newStatus === 'Incomplete') {
+            setIncompleteCount((prev) => prev + 1);
+            setCompletedCount((prev) => prev - 1);
+          } else if (newStatus == 'None') {
+            setCompletedCount((prev) => prev - 1);
+          }
+        } else if (oldStatus == 'Incomplete') {
+          if (newStatus === 'Partial') {
+            setPartialCount((prev) => prev + 1);
+            setIncompleteCount((prev) => prev - 1);
+          } else if (newStatus == 'Completed') {
+            setCompletedCount((prev) => prev + 1);
+            setIncompleteCount((prev) => prev - 1);
+          } else if (newStatus == 'None') {
+            setIncompleteCount((prev) => prev - 1);
+          }
+        } else if (oldStatus == 'Partial') {
+          //Partial
+          if (newStatus == 'Completed') {
+            setCompletedCount((prev) => prev + 1);
+            setPartialCount((prev) => prev - 1);
+          } else if (newStatus == 'Incomplete') {
+            setIncompleteCount((prev) => prev + 1);
+            setPartialCount((prev) => prev - 1);
+          } else if (newStatus == 'None') {
+            setPartialCount((prev) => prev - 1);
+          }
         }
       }
-      // How they follow it that when any course they are ahead, they take another course in that hour which they have backlogs for and they complete that.
+
       return ele;
     });
-
     console.log('statusChangeCount', statusChangeCount);
     console.log('Completed count:', completedCount);
     console.log('Incomplete count:', incompleteCount);
     console.log('Partial count:', partialCount);
-
     setData(result);
+    console.log(id, newStatus, data);
   };
+  useEffect(() => {
+    getTasks().then((res) => {
+      console.log('data', res);
+      const updatedStatusData = res.map((ele: Task) => {
+        ele.status = 'None';
+        return ele;
+      });
+      console.log('updatedStatusData', updatedStatusData);
+      setData(updatedStatusData);
+    });
+    const date = new Date();
+    const currentHour = date.getUTCHours() - 5; // Convert to US Eastern Time (UTC-5)
+
+    if (currentHour >= 0 && currentHour < 12) {
+      setGreeting('Good Morning');
+    } else if (currentHour >= 12 && currentHour < 17) {
+      setGreeting('Good Afternoon');
+    } else {
+      setGreeting('Good Evening');
+    }
+  }, []);
+  useEffect(() => {}, []);
 
   // const handleReply = async (id: string) => {
   //   console.log(tasks);
@@ -193,7 +199,12 @@ const ViewTask: React.FC = () => {
   //   }
   // };
   const handleReloadForAllTasks = () => {
-    window.location.reload();
+    const updatedStatusData = data.map((ele: Task) => {
+      ele.status = 'None';
+      return ele;
+    });
+    console.log('updatedStatusData', updatedStatusData);
+    setData(updatedStatusData);
   };
 
   return (
@@ -214,15 +225,15 @@ const ViewTask: React.FC = () => {
               <h1 className="text-black text-2xl font-serif mb-5">
                 {greeting} {employeeData.name}...
               </h1>
-              {/* <div>
+              <div>
                 <button
                   onClick={handleReloadForAllTasks}
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  Reload
+                  Reset
                 </button>
-              </div> */}
+              </div>
             </div>
             <div className="w-full overflow-x-auto">
               <table className="w-full">
@@ -280,7 +291,7 @@ const ViewTask: React.FC = () => {
                                   handleSetStatus(task._id, e.target.value)
                                 }
                                 // disabled={task.status !== 'None'}
-                                // value={task.status}
+                                value={task.status}
                               >
                                 <option value="None">None</option>
                                 <option value="Partial">Partial</option>

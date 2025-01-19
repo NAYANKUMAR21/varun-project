@@ -183,7 +183,10 @@ function ViewTask2() {
                       {item.employeeInfo.TaskCompleted.incomplete}
                     </td>
                     <td className="px-4 py-2">
-                      {item.employeeInfo.TaskCompleted.total}
+                      {item.employeeInfo.TaskCompleted.incomplete +
+                        item.employeeInfo.TaskCompleted.partial +
+                        item.employeeInfo.TaskCompleted.completed}{' '}
+                      /{item.employeeInfo.TaskCompleted.total}
                     </td>
                     <td className="px-4 py-2">
                       {`${item.DateAdded.split('-')[1]}-${
