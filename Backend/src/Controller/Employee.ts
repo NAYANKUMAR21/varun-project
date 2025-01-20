@@ -336,6 +336,7 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
     await latestUpdateModel.create({
       employeeId: employee._id,
       slNo: LastEntry,
+      DateAdded: DateConvert,
     });
 
     await DepartmentModel.updateOne(

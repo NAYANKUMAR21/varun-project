@@ -91,7 +91,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-screen bg-white min-h-screen mt-20 pl-[16.67%]">
+        <div className="w-screen bg-gray-50 min-h-screen mt-20 pl-[16.67%]">
           {/* 1/6 = ~16.67% */}
           <div className="min-h-full">
             <Outlet />

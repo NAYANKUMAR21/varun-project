@@ -78,6 +78,7 @@ const ViewTask: React.FC = () => {
     console.log(empId);
     try {
       setLoader(true);
+      console.log(dateAnCOmment.date);
       await AxiosAPI.post(`/employee/update-all-at-once/${empId}`, {
         data,
         comment: dateAnCOmment.comment,

@@ -8,7 +8,3 @@
 6. `db.latest_update_employees.updateMany({},{})`
 
 ---
-
-https://docs.google.com/spreadsheets/d/1ADZUQg02hC02PpP2ULMPs_meAUyGVV8pqaSbGCMBpsY/edit?gid=445592978#gid=445592978
-
-https://docs.google.com/spreadsheets/d/1ADZUQg02hC02PpP2ULMPs_meAUyGVV8pqaSbGCMBpsY/edit?gid=1652169484#gid=1652169484

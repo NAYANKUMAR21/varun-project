@@ -607,17 +607,16 @@ router.get('/get-task-updates', async (req, res) => {
     ]);
     const SortedUpdates = await latestUpdateModel
       .find({}, {})
-      .sort('slNo')
-      .populate('employeeId', 'name employeeId');
+      .sort('-slNo')
+      .populate('employeeId');
 
     console.log('getUpdatedTasks: ', getUpdatedTasks);
-    
+
     const sortedData = await sortData(getUpdatedTasks, SortedUpdates);
     return res.status(200).json({
       success: true,
-
-      data: sortedData,
       SortedUpdates,
+      data: sortedData,
     });
   } catch (error) {
     console.error(error);

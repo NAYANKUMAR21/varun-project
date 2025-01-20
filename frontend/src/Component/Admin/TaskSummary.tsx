@@ -33,23 +33,23 @@ function ViewTask2() {
 
       // console.log(response.data.data);
       // console.log(response.data.data, 'response');
-      let x = response.data.data.map((ele: any) => {
-        return {
-          ...ele,
-          createdAt: new Date(ele.createdAt).getMilliseconds(),
-        };
-      });
+      // let x = response.data.data.map((ele: any) => {
+      //   return {
+      //     ...ele,
+      //     createdAt: new Date(ele.createdAt).getMilliseconds(),
+      //   };
+      // });
 
-      const SortedData = x.reverse();
+      // const SortedData = x.reverse();
 
-      console.log(SortedData, 'Sorted');
+      // console.log(SortedData, 'Sorted');
 
       setMainData({
         ...mainData,
         // search: response.data.data,
         // data: response.data.data,
-        search: SortedData,
-        data: SortedData,
+        search: response.data.SortedUpdates,
+        data: response.data.SortedUpdates,
       });
       console.log(response.data.data, 'response');
     } catch (error) {
@@ -61,8 +61,8 @@ function ViewTask2() {
     const x = copy.filter((item: any) => {
       console.log(typeof item, item);
       return (
-        item.employeeInfo.employeeId.includes(e.target.value) ||
-        item.employeeInfo.department
+        item.employeeId.employeeId.includes(e.target.value) ||
+        item.employeeId.department
           .toLocaleLowerCase()
           .includes(e.target.value.toLocaleLowerCase())
       );
@@ -100,39 +100,45 @@ function ViewTask2() {
   }, []);
 
   return (
-    <div className="bg-gray-50 border border-gray-300 shadow-lg rounded-lg">
-      <div className="bg-gray-50 pt-6 pb-4">
-        <h1 className="text-2xl text-left mb-4 text-blue-600 font-semibold pl-5">
-          Task Completion Summary
-        </h1>
-      </div>
-
-      <div className="bg-gray-50 h-auto w-full p-5">
-        <div className="flex space-x-4 mb-6">
-          {/* Search by ID and Department */}
-          <input
-            id="input"
-            type="text"
-            placeholder="Search by ID or Department..."
-            onChange={HandleSearchId}
-            className="border border-gray-300 rounded-md p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
-          />
-          {/* Search by Date */}
-          <input
-            id="input"
-            type="date"
-            value={date.toISOString().split('T')[0]}
-            onChange={handleSetDate}
-            className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
-          />
-          <button
-            className="bg-blue-500 rounded-lg text-white px-5"
-            onClick={handleREsetSort}
-          >
-            Reset
-          </button>
+    <div className="relative bg-gray-50">
+      {/* Fixed header section that spans full width minus sidebar */}
+      <div className="fixed top-0 left-[240px] right-0 bg-gray-50 z-50 border-b border-gray-200 shadow-sm mt-24">
+        <div className="pb-4 pt-10">
+          <h1 className="text-2xl text-left text-blue-600 font-semibold pl-5">
+            Task Completion Summary
+          </h1>
         </div>
 
+        <div className="p-5">
+          <div className="flex space-x-4">
+            {/* Search by ID and Department */}
+            <input
+              id="input"
+              type="text"
+              placeholder="Search by ID or Department..."
+              onChange={HandleSearchId}
+              className="border border-gray-300 rounded-md p-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+            />
+            {/* Search by Date */}
+            <input
+              id="input"
+              type="date"
+              value={date.toISOString().split('T')[0]}
+              onChange={handleSetDate}
+              className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+            />
+            <button
+              className="bg-blue-500 rounded-lg text-white px-5"
+              onClick={handleREsetSort}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main content with padding to account for fixed header */}
+      <div className="mt-48">
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-sm">
           <table className="w-full text-sm text-left text-gray-700">
             <thead className="bg-blue-100 text-blue-600 text-xs uppercase font-semibold">
@@ -171,35 +177,33 @@ function ViewTask2() {
             </thead>
             <tbody>
               {mainData.data &&
-                mainData.data.map((item: any, index: number) => (
+                mainData?.data?.map((item: any, index: number) => (
                   <tr key={index} className="border-b hover:bg-gray-100">
                     <td className="px-4 py-2">{index + 1}</td>
                     <td className="px-4 py-2">
                       <Link
-                        to={`/single-employee-update/${item.employeeInfo._id}`}
+                        to={`/single-employee-update/${item.employeeId._id}`}
                         className="text-red-500 hover:underline"
                       >
-                        {item.employeeInfo.employeeId}
+                        {item.employeeId.employeeId}
                       </Link>
                     </td>
-                    <td className="px-4 py-2">{item.employeeInfo.name}</td>
+                    <td className="px-4 py-2">{item.employeeId.name}</td>
+                    <td className="px-4 py-2">{item.employeeId.department}</td>
                     <td className="px-4 py-2">
-                      {item.employeeInfo.department}
+                      {item.employeeId.TasksCompleted.completed}
                     </td>
                     <td className="px-4 py-2">
-                      {item.employeeInfo.TaskCompleted.completed}
+                      {item.employeeId.TasksCompleted.partial}
                     </td>
                     <td className="px-4 py-2">
-                      {item.employeeInfo.TaskCompleted.partial}
+                      {item.employeeId.TasksCompleted.incomplete}
                     </td>
                     <td className="px-4 py-2">
-                      {item.employeeInfo.TaskCompleted.incomplete}
-                    </td>
-                    <td className="px-4 py-2">
-                      {item.employeeInfo.TaskCompleted.incomplete +
-                        item.employeeInfo.TaskCompleted.partial +
-                        item.employeeInfo.TaskCompleted.completed}{' '}
-                      /{item.employeeInfo.TaskCompleted.total}
+                      {item.employeeId.TasksCompleted.incomplete +
+                        item.employeeId.TasksCompleted.partial +
+                        item.employeeId.TasksCompleted.completed}{' '}
+                      /{item.employeeId.TasksCompleted.total}
                     </td>
                     <td className="px-4 py-2">
                       {`${item.DateAdded.split('-')[1]}-${
@@ -208,7 +212,7 @@ function ViewTask2() {
                     </td>
                     <td className="px-4 py-2">
                       <Link
-                        to={`/dashboard/single-employee-update/${item.employeeInfo._id}/${item.employeeInfo.employeeId}`}
+                        to={`/dashboard/single-employee-update/${item.employeeId._id}/${item.employeeId.employeeId}`}
                       >
                         <button className="text-blue-500 hover:underline">
                           ➡️
