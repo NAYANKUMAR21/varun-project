@@ -13,7 +13,8 @@ import fs from 'fs';
 import formatDate from '../utils/dateConverter';
 import DepartmentModel from '../Model/Department';
 import transporter, { mailOptions } from '../utils/mailService';
-import { latestUpdateModel } from 'Model/Latest_update';
+import { latestUpdateModel } from '../Model/Latest_update';
+import { sortData } from '../utils/Sort_Get_tasks';
 
 const router = Router();
 
@@ -607,13 +608,16 @@ router.get('/get-task-updates', async (req, res) => {
     const SortedUpdates = await latestUpdateModel
       .find({}, {})
       .sort('slNo')
-      .populate('employeeId');
+      .populate('employeeId', 'name employeeId');
 
     console.log('getUpdatedTasks: ', getUpdatedTasks);
-
+    
+    const sortedData = await sortData(getUpdatedTasks, SortedUpdates);
     return res.status(200).json({
       success: true,
-      data: getUpdatedTasks,
+
+      data: sortedData,
+      SortedUpdates,
     });
   } catch (error) {
     console.error(error);

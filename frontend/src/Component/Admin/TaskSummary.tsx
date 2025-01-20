@@ -16,8 +16,18 @@ function ViewTask2() {
     data: [],
   });
   const [date, Setdate] = useState<Date>(new Date());
+  const [lastFetchTime, setLastFetchTime] = useState<number>(0); // Track the last fetch time
 
   const getTasks = async () => {
+    const currentTime = Date.now();
+    // Check if 30 seconds (30000 ms) have passed since the last fetch
+    if (currentTime - lastFetchTime < 30000) {
+      return; // Exit if the time condition is not met
+    }
+
+    console.log(currentTime, lastFetchTime);
+    setLastFetchTime(currentTime); // Update the last fetch time
+
     try {
       const response = await AxiosAPI.get('/admin/get-task-updates');
 
@@ -83,7 +93,10 @@ function ViewTask2() {
     });
   };
   useEffect(() => {
+    // const timer = setTimeout(() => {
     getTasks();
+    // }, 10000); // Call getTasks after 2 minutes
+    // return () => clearTimeout(timer); // Cleanup the timer on unmount
   }, []);
 
   return (

@@ -5,9 +5,9 @@ const file = {
   slNo: { type: Number, require: true, unique: true },
 };
 
-const Latest_Update = new mongoose.Schema(file, { versionKey: false });
+const Latest_Update_Schema = new mongoose.Schema(file, { versionKey: false });
 
 export const latestUpdateModel = mongoose.model(
   'Latest_Update_Employee',
-  Latest_Update
+  Latest_Update_Schema
 );

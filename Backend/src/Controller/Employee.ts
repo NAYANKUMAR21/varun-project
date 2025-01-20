@@ -13,7 +13,7 @@ import mongoose from 'mongoose';
 import formatDate from '../utils/dateConverter';
 import DepartmentModel from '../Model/Department';
 import transporter, { mailOptions } from '../utils/mailService';
-import { latestUpdateModel } from 'Model/Latest_update';
+import { latestUpdateModel } from '../Model/Latest_update';
 const router = Router();
 
 // EditTask
