@@ -37,15 +37,17 @@ const Dashboard: React.FC = () => {
       <nav className="text-black fixed w-full z-10 transition-colors duration-300 bg-white">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-white text-2xl font-bold font-serif">
-            <img
-              className="w-60 h-30"
-              src="https://www.aequs.com/wp-content/uploads/2021/06/Aequs-Logo-new.png"
-              alt="aques-symbol"
-            />
+            <Link to="/dashboard">
+              <img
+                className="w-60 h-30"
+                src="https://www.aequs.com/wp-content/uploads/2021/06/Aequs-Logo-new.png"
+                alt="aques-symbol"
+              />
+            </Link>
           </div>
-          <div className="flex space-x-4">
+          {/* <div className="flex space-x-4">
             <Link to="/dashboard">Admin DashBoard</Link>
-          </div>
+          </div> */}
         </div>
       </nav>
 
@@ -62,7 +64,7 @@ const Dashboard: React.FC = () => {
                 <Link to="">Dashboard</Link>
               </li>
               <li className="text-white font-serif">
-                <Link to="/dashboard/add-department">Department's</Link>
+                <Link to="/dashboard/add-department">Departments</Link>
               </li>
               <li className="text-white font-serif">
                 <Link to="addemployee">Add Employee</Link>

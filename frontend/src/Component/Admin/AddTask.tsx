@@ -78,120 +78,130 @@ const AddTask: React.FC = () => {
     depts();
   }, []);
   return (
-    <div className="bg-gray-100 border border-black">
-    <div className="bg-gray-100 pt-10">
-      <h1 className="text-3xl  text-left mb-6 pl-5 text-red-500">
-        Add Task...
-      </h1>{' '}
-      {/* Changed text-center to text-left */}
-    </div>
+    <div>
+      <div className=" pt-10">
+        <h1 className="text-3xl  text-left mb-6 pl-5 text-red-500">
+          Add Task...
+        </h1>{' '}
+        {/* Changed text-center to text-left */}
+      </div>
+      <div className="shadow-md rounded-md w-[50%] m-auto">
+        <div className="w-[90%] m-auto flex justify-center py-5">
+          <div className=" w-full max-w-xl">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="department" className="w-full ">
+                  Department
+                </label>
+                <select
+                  id="department"
+                  name="department"
+                  onChange={(e: any) => setSelectedDepartment(e.target.value)}
+                  className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 "
+                >
+                  <option value="" className="text-gray-500">
+                    {' '}
+                    Select Department{' '}
+                  </option>
 
-    <div className="flex justify-center pt-5 h-screen bg-gray-100">
-      <div className=" w-full max-w-xl">
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <label htmlFor="department" className="w-full ">
-            Department
-          </label>
-          <select
-            id="department"
-            name="department"
-            onChange={(e: any) => setSelectedDepartment(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 "
-          >
-            <option value="">--select --</option>
-
-            {departmentState &&
-              departmentState.map(
-                (ele: { _id: string; Name: string }, index: number) => {
-                  return (
-                    <option key={index} value={ele.Name}>
-                      {ele.Name}
-                    </option>
-                  );
-                }
-              )}
-            {/* <option value="Quality">Quality</option>
+                  {departmentState &&
+                    departmentState.map(
+                      (ele: { _id: string; Name: string }, index: number) => {
+                        return (
+                          <option key={index} value={ele.Name}>
+                            {ele.Name}
+                          </option>
+                        );
+                      }
+                    )}
+                  {/* <option value="Quality">Quality</option>
 
           <option value="Shipping & Receiving">Shipping & Receiving</option>
 
           <option value="Warehouse">Warehouse</option> */}
-          </select>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="category" className="w-full ">
+                  Category
+                </label>
+                {/* {selectedDepartment !== 'Quality' ? ( */}
+                <input
+                  type="text"
+                  name="category"
+                  onChange={handleCategoryChange}
+                  placeholder="category"
+                  className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              {/* ) : ( */}
 
-          <label htmlFor="category" className="w-full ">
-            Category
-          </label>
-          {/* {selectedDepartment !== 'Quality' ? ( */}
-          <input
-            type="text"
-            name="category"
-            onChange={handleCategoryChange}
-            placeholder="category"
-            className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {/* ) : ( */}
-          {/* <select
+              {/* <select
             name="category"
             id="category"
             onChange={handleCategoryChange}
             className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option>--select--</option> */}
-          {/* <option value="Incoming Inspection">Incoming Inspection</option>
+              {/* <option value="Incoming Inspection">Incoming Inspection</option>
             <option value="Layout Table">Layout Table</option>
             <option value="Keyence Table">Keyence Table</option>
             <option value="CMM">CMM</option>
             <option value="Visual Inspection">Visual Inspection</option>
             <option value="General Area">General Area</option> */}
-          {/* {selectedDepartment === 'Quality' &&
+              {/* {selectedDepartment === 'Quality' &&
               Dept.map((dept) => (
                 <option key={dept.Category} value={dept.Category}>
                   {dept.Category}
                 </option>
               ))}
           </select> */}
-          {/* )} */}
+              {/* )} */}
+              <div>
+                <label htmlFor="task" className="w-full ">
+                  {' '}
+                  Task
+                </label>
 
-          <label htmlFor="task" className="w-full ">
-            {' '}
-            Task
-          </label>
-
-          {/* {selectedDepartment !== 'Quality' ? ( */}
-          <input
-            type="text"
-            name="task"
-            onChange={handleChange}
-            placeholder="Task"
-            className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {/* ) : (
+                {/* {selectedDepartment !== 'Quality' ? ( */}
+                <input
+                  type="text"
+                  name="task"
+                  onChange={handleChange}
+                  placeholder="Task"
+                  className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              {/* ) : (
           <select
             name="task"
             onChange={handleChange}
             className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">--select task--</option> */}
-          {/* {tasks &&
+              {/* {tasks &&
               tasks.map((task: any) => (
                 <option key={task} value={task}>
                   {task}
                 </option>
               ))}
           </select> */}
-          {/* )} */}
-          <label htmlFor="task" className="w-full ">
-            {' '}
-            Description
-          </label>
-          <textarea
-            placeholder="Please Add Description it is mandatory...."
-            name="description"
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
-          />
+              {/* )} */}
+              <div>
+                <label htmlFor="task" className="w-full ">
+                  {' '}
+                  Description
+                </label>
+                <textarea
+                  placeholder="Please Add Description it is mandatory...."
+                  name="description"
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  rows={4}
+                />
+              </div>
 
-          {/* <select
+              {/* <select
           className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select Status</option>
@@ -200,16 +210,17 @@ const AddTask: React.FC = () => {
           <option value="completed">Completed</option>
         </select> */}
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Add Task
-          </button>
-        </form>
+              <button
+                type="submit"
+                className="w-full bg-gray-500 text-white p-2 rounded-md shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Add Task
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

@@ -190,12 +190,12 @@ const ViewTask: React.FC = () => {
                               <article className="p-2 flex justify-between gap-1">
                                 <Link
                                   to={`/dashboard/edittask/${task._id}`}
-                                  className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none"
+                                  className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700 focus:outline-none"
                                 >
                                   Edit
                                 </Link>
                                 <button
-                                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 focus:outline-none"
+                                  className="bg-red-500 text-white p-2 rounded hover:bg-red-700 focus:outline-none"
                                   onClick={() => deletetask(task._id)}
                                 >
                                   Delete

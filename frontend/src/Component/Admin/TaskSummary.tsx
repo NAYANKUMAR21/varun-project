@@ -104,8 +104,8 @@ function ViewTask2() {
       {/* Fixed header section that spans full width minus sidebar */}
       <div className="fixed top-0 left-[240px] right-0 bg-gray-50 z-50 border-b border-gray-200 shadow-sm mt-24">
         <div className="pb-4 pt-10">
-          <h1 className="text-2xl text-left text-blue-600 font-semibold pl-5">
-            Task Completion Summary
+          <h1 className="text-2xl text-left text-red-500 font-semibold pl-5">
+            Task Completion Summary...
           </h1>
         </div>
 
@@ -117,7 +117,7 @@ function ViewTask2() {
               type="text"
               placeholder="Search by ID or Department..."
               onChange={HandleSearchId}
-              className="border border-gray-300 rounded-md p-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+              className="border border-gray-300 rounded-md p-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200"
             />
             {/* Search by Date */}
             <input
@@ -125,14 +125,14 @@ function ViewTask2() {
               type="date"
               value={date.toISOString().split('T')[0]}
               onChange={handleSetDate}
-              className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
+              className="border border-gray-300 rounded-md p-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200"
             />
-            <button
-              className="bg-blue-500 rounded-lg text-white px-5"
+            {/* <button
+              className="bg-red-500 rounded-lg text-white px-5"
               onClick={handleREsetSort}
             >
               Reset
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ function ViewTask2() {
       <div className="mt-48">
         <div className="overflow-x-auto rounded-lg border border-gray-300 shadow-sm">
           <table className="w-full text-sm text-left text-gray-700">
-            <thead className="bg-blue-100 text-blue-600 text-xs uppercase font-semibold">
+            <thead className="bg-red-100 text-gray-500 text-xs uppercase font-semibold">
               <tr>
                 <th scope="col" className="px-4 py-3">
                   Sl. No
@@ -164,10 +164,8 @@ function ViewTask2() {
                 <th scope="col" className="px-4 py-3">
                   Incomplete
                 </th>
-                <th scope="col" className="px-4 py-3">
-                  Total Tasks
-                </th>
-                <th scope="col" className="px-4 py-3">
+
+                <th scope="col" className="px-4 py-3 text-center">
                   Date
                 </th>
                 <th scope="col" className="px-4 py-3">
@@ -180,31 +178,29 @@ function ViewTask2() {
                 mainData?.data?.map((item: any, index: number) => (
                   <tr key={index} className="border-b hover:bg-gray-100">
                     <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">
-                      <Link
-                        to={`/single-employee-update/${item.employeeId._id}`}
-                        className="text-red-500 hover:underline"
-                      >
-                        {item.employeeId.employeeId}
-                      </Link>
+                    <td className="px-4 py-2 hover:cursor-pointer">
+                      {item.employeeId.employeeId}
                     </td>
                     <td className="px-4 py-2">{item.employeeId.name}</td>
-                    <td className="px-4 py-2">{item.employeeId.department}</td>
-                    <td className="px-4 py-2">
-                      {item.employeeId.TasksCompleted.completed}
+                    <td className="px-4 py-2 ">{item.employeeId.department}</td>
+                    <td className="px-4 py-2 ">
+                      {item.employeeId.TasksCompleted.completed}/
+                      {item.employeeId.TasksCompleted.total}
                     </td>
-                    <td className="px-4 py-2">
-                      {item.employeeId.TasksCompleted.partial}
+                    <td className="px-4 py-2 ">
+                      {item.employeeId.TasksCompleted.partial}/
+                      {item.employeeId.TasksCompleted.total}
                     </td>
-                    <td className="px-4 py-2">
-                      {item.employeeId.TasksCompleted.incomplete}
+                    <td className="px-4 py-2 ">
+                      {item.employeeId.TasksCompleted.incomplete}/
+                      {item.employeeId.TasksCompleted.total}
                     </td>
-                    <td className="px-4 py-2">
+                    {/* <td className="px-4 py-2">
                       {item.employeeId.TasksCompleted.incomplete +
                         item.employeeId.TasksCompleted.partial +
                         item.employeeId.TasksCompleted.completed}{' '}
                       /{item.employeeId.TasksCompleted.total}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-2">
                       {`${item.DateAdded.split('-')[1]}-${
                         item.DateAdded.split('-')[2]
@@ -214,7 +210,7 @@ function ViewTask2() {
                       <Link
                         to={`/dashboard/single-employee-update/${item.employeeId._id}/${item.employeeId.employeeId}`}
                       >
-                        <button className="text-blue-500 hover:underline">
+                        <button className="text-red-500 hover:underline">
                           ➡️
                         </button>
                       </Link>

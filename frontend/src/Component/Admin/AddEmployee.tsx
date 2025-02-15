@@ -88,59 +88,64 @@ const AddEmployee: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 border border-black">
-      <div className="bg-gray-100 pt-10 pl-5">
-        <h1 className="text-3xl font-serif text-left mb-6 text-red-500"> Add Employee...</h1>{' '}
+    <div>
+      <div className="pt-10 pl-5">
+        <h1 className="text-3xl text-left mb-6 text-red-500">
+          {' '}
+          Add Employee...
+        </h1>{' '}
         {/* Changed text-center to text-left */}
       </div>
-      <div className="flex justify-center pt-10 min-h-screen bg-gray-100">
-        <div className="w-full max-w-xl">
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Name"
-              name="name"
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
-            />
-            <input
-              type="email"
-              name="email"
-              onChange={handleChange}
-              placeholder="Email"
-              className="w-full border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md shadow-md"
-            />
-            <input
-              type="text"
-              name="employeeId"
-              onChange={handleChange}
-              placeholder="Employee ID"
-              className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <select
-              name="department"
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Choose department</option>
-              {departmentState &&
-                departmentState.map(
-                  (ele: { _id: string; Name: string }, index: number) => {
-                    return (
-                      <option key={index} value={ele.Name}>
-                        {ele.Name}
-                      </option>
-                    );
-                  }
-                )}
-            </select>
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Add Employee
-            </button>
-          </form>
+      <div className="w-[50%] shadow-md rounded-md m-auto px-5 py-5  pt-10">
+        <div className="flex justify-center ">
+          <div className="w-full max-w-xl">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md"
+              />
+              <input
+                type="email"
+                name="email"
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-full border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md shadow-md"
+              />
+              <input
+                type="text"
+                name="employeeId"
+                onChange={handleChange}
+                placeholder="Employee ID"
+                className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <select
+                name="department"
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Choose department</option>
+                {departmentState &&
+                  departmentState.map(
+                    (ele: { _id: string; Name: string }, index: number) => {
+                      return (
+                        <option key={index} value={ele.Name}>
+                          {ele.Name}
+                        </option>
+                      );
+                    }
+                  )}
+              </select>
+              <button
+                type="submit"
+                className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700"
+              >
+                Add Employee
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -34,13 +34,13 @@ const Maindashboard = () => {
     <div className="mt-12">
       <h5 className="ml-4 mb-5 text-2xl text-red-500 font-serif">Dashboard</h5>
       {/* grid in colom 3  */}
-      <div className="grid grid-cols-2 bg-gray-100 h-[300px] border-t-8 ml-2 border-t-red-300 border-b-8 border-b-red-300 mr-5">
+      <div className="flex bg-gray-100 h-[300px] border-t-8 ml-2 border-t-red-300 border-b-8 border-b-red-300 mr-5 justify-center">
         <div className=" border w-36 h-20 justify-center items-center mt-20 ml-6 rounded-md bg-white">
-          <h1 className="text-center mt-3">Total Employee</h1>
+          <h1 className="text-center mt-3">Total Employees</h1>
           <h5 className=" text-center mt-2">{data}</h5>
         </div>
         <div className=" border w-36 h-20 justify-center items-center mt-20 ml-6 rounded-md bg-white">
-          <h1 className="text-center mt-3">Total Task</h1>
+          <h1 className="text-center mt-3">Total Tasks</h1>
           <h5 className=" text-center mt-2">{data2}</h5>
         </div>{' '}
         {/* <div className=" border w-36 h-20 justify-center items-center mt-20 ml-6 rounded-md bg-white">

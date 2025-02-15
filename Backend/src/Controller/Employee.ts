@@ -300,12 +300,13 @@ router.post('/update-all-at-once/:empId', async (req, res) => {
       { employeeId: empId },
       {
         $push: { entryNumberByEmployee: getEntryNumber?.entryNumber },
-        $inc: {
+        // Increment existing completed count
+        $set: {
           'TasksCompleted.completed': countOfCompleted,
           'TasksCompleted.partial': countOfPartial,
           'TasksCompleted.incomplete': countOfIncomplete,
-        }, // Increment existing completed count
-        $set: { 'TasksCompleted.total': noOfDocumentsOfTask }, // Set new total
+          'TasksCompleted.total': noOfDocumentsOfTask,
+        }, // Set new total
       },
       { new: true }
     );

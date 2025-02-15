@@ -52,13 +52,13 @@ const EditTask: React.FC = () => {
             name="task"
             onChange={handleChange}
             placeholder="Task"
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           <textarea
             placeholder="Description"
             name="description"
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
             rows={4}
           />
           <input
@@ -66,9 +66,9 @@ const EditTask: React.FC = () => {
             name="deadline"
             onChange={handleChange}
             placeholder="Deadline"
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
-          <select className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
             <option value="">Select Status</option>
             <option value="pending">Pending</option>
             <option value="in-progress">In Progress</option>
@@ -78,7 +78,7 @@ const EditTask: React.FC = () => {
             id="department"
             name="department"
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 "
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500 "
           >
             <option value="">--select --</option>
 
@@ -97,7 +97,7 @@ const EditTask: React.FC = () => {
           /> */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Add Task
           </button>

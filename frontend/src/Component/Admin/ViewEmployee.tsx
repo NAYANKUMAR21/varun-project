@@ -66,72 +66,72 @@ const ViewEmployee: React.FC = () => {
   // EditEmployee
 
   return (
-      <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <label htmlFor="department" className="block text-lg font-medium text-gray-700 mb-2">
-              Select Department
-            </label>
-            <select
-                name="department"
-                id="department"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={handleChange}
-            >
-              <option value="">Choose department</option>
-              {depts &&
-                  depts.map((ele: { _id: string; Name: string }, index: number) => (
-                      <option key={index} value={ele.Name}>
-                        {ele.Name}
-                      </option>
-                  ))}
-            </select>
-          </div>
-
-
-          <section className="mt-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {data &&
-                  data.map((employee: any, index: any) => (
-                      <div
-                          key={index}
-                          className="bg-white shadow-md rounded-lg p-6 border-t-4 border-blue-500 hover:shadow-lg transition duration-300"
-                      >
-                        <h1 className="text-xl font-bold text-gray-800 text-center mb-3">
-                          {employee.name}
-                        </h1>
-                        <p className="text-gray-600 mb-2">
-                          <strong>Email:</strong> {employee.email}
-                        </p>
-                        <p className="text-gray-600 mb-2">
-                          <strong>Employee ID:</strong> {employee.employeeId}
-                        </p>
-                        <p className="text-gray-600 mb-2">
-                          <strong>Department:</strong> {employee.department}
-                        </p>
-
-
-                        <div className="flex justify-between mt-4">
-                          <Link
-                              to={`/dashboard/editemployee/${employee._id}`}
-                              className="bg-blue-600 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-700"
-                          >
-                            Edit
-                          </Link>
-                          <button
-                              className="bg-red-600 text-white text-sm px-4 py-2 rounded-md hover:bg-red-700"
-                              onClick={() => deleteEmployee(employee._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                  ))}
-            </div>
-          </section>
+    <div className="p-8 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+          <label
+            htmlFor="department"
+            className="block text-lg font-medium text-red-700 mb-2"
+          >
+            Select Department
+          </label>
+          <select
+            name="department"
+            id="department"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            onChange={handleChange}
+          >
+            <option value="">Choose department</option>
+            {depts &&
+              depts.map((ele: { _id: string; Name: string }, index: number) => (
+                <option key={index} value={ele.Name}>
+                  {ele.Name}
+                </option>
+              ))}
+          </select>
         </div>
+
+        <section className="mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {data &&
+              data.map((employee: any, index: any) => (
+                <div
+                  key={index}
+                  className="bg-white shadow-md rounded-lg p-6 border-t-4 border-red-500 hover:shadow-lg transition duration-300"
+                >
+                  <h1 className="text-xl font-bold text-gray-800 text-center mb-3">
+                    {employee.name}
+                  </h1>
+                  <p className="text-gray-600 mb-2">
+                    <strong>Email:</strong> {employee.email}
+                  </p>
+                  <p className="text-gray-600 mb-2">
+                    <strong>Employee ID:</strong> {employee.employeeId}
+                  </p>
+                  <p className="text-gray-600 mb-2">
+                    <strong>Department:</strong> {employee.department}
+                  </p>
+
+                  <div className="flex justify-between mt-4">
+                    <Link
+                      to={`/dashboard/editemployee/${employee._id}`}
+                      className="bg-gray-500 text-white text-sm px-4 py-2 rounded-md hover:bg-gray-700"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="bg-red-600 text-white text-sm px-4 py-2 rounded-md hover:bg-red-700"
+                      onClick={() => deleteEmployee(employee._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </section>
       </div>
+    </div>
   );
 };
 

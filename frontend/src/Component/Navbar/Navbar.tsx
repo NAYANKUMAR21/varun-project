@@ -1,11 +1,34 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import DateTimeDisplay from './DateAndTime';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../AuthContext/AuthContextProvider';
 function Navbar({
   profileData,
 }: {
   profileData: { Eid?: string; imageUrl?: string };
 }) {
+  const [token, SetToken] = useState(localStorage.getItem('token') || '');
+  const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const value = useContext(AuthContext) as {
+    employeeLogged: any;
+    setEmployeeLogged: any;
+  };
+  const handleLogout = () => {
+    // Perform logout actions here
+    localStorage.removeItem('employee');
+    value.setEmployeeLogged('');
+    navigate('/');
+  };
+  useEffect(() => {
+    if (token && token.length > 0) {
+      navigate('/viewtasks');
+      return;
+    }
+    handleLogout();
+    // navigate('/');
+  }, []);
   return (
     <div>
       <nav
@@ -21,7 +44,7 @@ function Navbar({
               />
             </Link>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 items-center">
             <Link
               to="/viewtasks"
               className={`text-black  px-3 py-2 rounded font-serif`}
@@ -45,9 +68,39 @@ function Navbar({
               /> */}
               <div>Profile</div>
             </Link>
+            <button
+              type="button"
+              className="h-9 w-20 rounded bg-gray-900 text-white"
+              onClick={() => setShowLogoutConfirm(true)}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </nav>
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+            <h3 className="text-lg font-semibold text-gray-800 text-center">
+              Are you sure you want to logout?
+            </h3>
+            <div className="mt-6 flex justify-between">
+              <button
+                className="w-24 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+                onClick={handleLogout}
+              >
+                Yes
+              </button>
+              <button
+                className="w-24 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-300"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

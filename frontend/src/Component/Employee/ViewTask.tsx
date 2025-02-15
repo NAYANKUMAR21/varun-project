@@ -213,27 +213,27 @@ const ViewTask: React.FC = () => {
       <div className="">
         <Navbar
           profileData={{
-            Eid: employeeData.employeeId,
-            imageUrl: employeeData?.imageUrl || employeeData.profile,
+            Eid: employeeData?.employeeId,
+            imageUrl: employeeData?.imageUrl || employeeData?.profile,
           }}
         />
       </div>
 
-      <div className="p-8 ">
+      <div className="p-8 w-[80%] m-auto">
         <section className="container mx-auto p-6 font-mono mt-16">
           <div className="w-full mb-8 overflow-hidden rounded-lg shadow-lg">
             <div className="flex justify-between items-center">
               <h1 className="text-black text-2xl font-serif mb-5">
-                {greeting} {employeeData.name}...
+                {greeting} {employeeData?.name}...
               </h1>
               <div>
-                <button
+                {/* <button
                   onClick={handleReloadForAllTasks}
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
                   Reset
-                </button>
+                </button> */}
               </div>
             </div>
             <div className="w-full overflow-x-auto">

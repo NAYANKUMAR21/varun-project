@@ -57,21 +57,21 @@ const EditEmployee: React.FC = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white w-full max-w-md p-6 rounded-md shadow-md">
-        <h1 className="text-3xl font-serif text-center mb-6">Edit Employee</h1>
+        <h1 className="text-3xl text-center mb-6">Edit Employee</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Name"
             name="name"
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           <input
             type="email"
             name="email"
             onChange={handleChange}
             placeholder="Email"
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
 
           <input
@@ -79,12 +79,12 @@ const EditEmployee: React.FC = () => {
             name="employeeId"
             onChange={handleChange}
             placeholder="Employee ID"
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           />
           <select
             name="department"
             onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             {' '}
             <option value="">Choose dept</option>
@@ -107,7 +107,7 @@ const EditEmployee: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Edit Employee
           </button>
